@@ -19,6 +19,33 @@ function make_left_page(){
 
 
     // Build Chart
+    let mapDiv = document.createElement('div')
+    mapDiv.id = 'mapDiv'
+    mapDiv.height = '50%'
+    mapDiv.width = '100%'
+    myDiv.appendChild(mapDiv)
+    var data = [
+        {
+            type: "scattermapbox",
+            fill: "toself",
+            lon: [121, 121, 120, 120],
+            lat: [23, 22.5, 23, 22.5],
+            marker: { size: 10, color: "orange" }
+        }
+    ];
+    
+    var layout = {
+        mapbox: {
+            style: "stamen-terrain",
+            center: { lon: 120.9738819, lat: 23.97565 },
+            zoom: 6.5
+        },
+        showlegend: false,
+        height: 800,
+        width: 600
+    };
+    
+    Plotly.newPlot("mapDiv", data, layout);
     
     
 }
