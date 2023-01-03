@@ -27,15 +27,24 @@ html, body {
     height: 100%;
     border-width: 5px;
     cursor: pointer;
-    border: 2px solid;
-    border-color: #EDEDED;
+    border: 3px solid;
+    background-color: #fafafa;
     font-size: 30px;
 }
 .leftButton{
     border-radius: 15px 0px 0px 15px;
+    
+    border-color:  rgba(1, 130, 186, 0.685);
+}
+.leftButton:hover{
     background-color: rgba(1, 131, 186, 0.18);
 }
+
 .rightButton{
     border-radius: 0px 15px 15px 0px;
-    background-color: rgba(255, 157, 136, 0.7);
+    
+    border-color: rgba(255, 157, 136, 0.7);;
+}
+.rightButton:hover{
+    background-color: rgba(255, 157, 136, 0.18);
 }
