@@ -1,8 +1,11 @@
+html, body {
+    height: 100%;
+  }
 .main-page{
     max-width: 1440px; 
     max-height: 1024px;
     width: 100%;
-    height: 100%;
+    height:100%;
 }
 .sub-page{
     display: inline-block; 
@@ -12,9 +15,27 @@
 }
 .left-page{
     width: 50%; 
-    
+    height:100%;
 }
 .right-page{
     width: 50%;
      
+}
+
+.DisplayButton{
+    width: 50%;
+    height: 100%;
+    border-width: 5px;
+    cursor: pointer;
+    border: 2px solid;
+    border-color: #EDEDED;
+    font-size: 30px;
+}
+.leftButton{
+    border-radius: 15px 0px 0px 15px;
+    background-color: rgba(1, 131, 186, 0.18);
+}
+.rightButton{
+    border-radius: 0px 15px 15px 0px;
+    background-color: rgba(255, 157, 136, 0.7);
 }
