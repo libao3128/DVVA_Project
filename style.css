@@ -6,6 +6,8 @@ html, body {
     max-height: 1024px;
     width: 100%;
     height:100%;
+    display: flex;
+    
 }
 .sub-page{
     display: inline-block; 
@@ -13,13 +15,17 @@ html, body {
     zoom: 1; 
     vertical-align: top;
 }
+.sub-sub-page{
+    display: flex;
+    justify-content: center;
+}
 .left-page{
     width: 50%; 
     height:100%;
 }
 .right-page{
     width: 50%;
-     
+    height:100%;
 }
 
 .DisplayButton{

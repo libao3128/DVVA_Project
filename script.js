@@ -6,8 +6,7 @@ function make_left_page(){
     let buttonDiv = document.createElement('div')
     buttonDiv.name = 'button-panel'
     buttonDiv.style.height = '7%'
-    buttonDiv.style.display = 'flex'
-    buttonDiv.style.justifyContent = 'center'
+    buttonDiv.className = 'sub-sub-page'
     myDiv.appendChild(buttonDiv)
 
     var button = document.createElement("BUTTON");
@@ -24,6 +23,7 @@ function make_left_page(){
     // Build Chart
     let mapDiv = document.createElement('div')
     mapDiv.id = 'mapDiv'
+    mapDiv.style.height = '80%'
     myDiv.appendChild(mapDiv)
     var data = [
         {
@@ -42,8 +42,13 @@ function make_left_page(){
             zoom: 6.5
         },
         showlegend: false,
-        height: 700,
-        width: 600
+        autosize:true,
+        //height: 770,
+        //width: 600,
+        margin:{
+            b: 50,
+            t: 50,
+        }
     };
     
     Plotly.newPlot("mapDiv", data, layout);
@@ -52,14 +57,13 @@ function make_left_page(){
     //Build Input Bar
     let barDiv = document.createElement('div')
     barDiv.id = 'barDiv'
-    barDiv.width = '100%'
-    barDiv.height = '20%'
+    barDiv.style.width = '100%'
+    barDiv.style.height = '10%'
     myDiv.appendChild(barDiv)
 
     let month_barDiv = document.createElement('div')
-    month_barDiv.style.display = 'flex'
-    month_barDiv.style.justifyContent = 'center'
-    myDiv.appendChild(month_barDiv)
+    month_barDiv.className = 'sub-sub-page'
+    barDiv.appendChild(month_barDiv)
 
 
     var month_bar = document.createElement('input')
@@ -84,9 +88,8 @@ function make_left_page(){
 
 
     let year_barDiv = document.createElement('div')
-    year_barDiv.style.display = 'flex'
-    year_barDiv.style.justifyContent = 'center'
-    myDiv.appendChild(year_barDiv)
+    year_barDiv.className = 'sub-sub-page'
+    barDiv.appendChild(year_barDiv)
 
 
     var year_bar = document.createElement('input')
@@ -111,7 +114,119 @@ function make_left_page(){
     year_barDiv.appendChild(year_labelDiv)
     
 }
+function make_right_page(){
+    let rightDiv = document.getElementsByClassName('right-page')[0]
+    
+    var heatmapDiv = document.createElement('div')
+    heatmapDiv.className = 'sub-sub-page'
+    heatmapDiv.id = 'heatDiv'
+    heatmapDiv.style.height = '50%'
+    heatmapDiv.style.width = '100%'
+    rightDiv.appendChild(heatmapDiv)
+    make_heat_map()
 
+    var barchartDiv = document.createElement('div')
+    barchartDiv.className = 'sub-sub-page'
+    barchartDiv.id = 'barchartDiv'
+    barchartDiv.style.height = '25%'
+    rightDiv.appendChild(barchartDiv)
+    make_bar_chart()
+
+    var linechartDiv = document.createElement('div')
+    linechartDiv.className = 'sub-sub-page'
+    linechartDiv.id = 'linechartDiv'
+    linechartDiv.style.height = '25%'
+    rightDiv.appendChild(linechartDiv)
+    make_line_chart()
+}
+function make_heat_map(){
+    y = [...Array(12).keys()].map(function(number) {
+        return getMonthName(number + 1);
+      })
+    
+    console.log(y)
+    var data = [
+      {
+        z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
+        x: ['123f','f123','1s23','12a3','12s3'],
+        y: ['Jan', 'Feb', 'Mar'],
+        type: 'heatmap',
+        hoverongaps: false
+      }
+    ];
+    var layout = {
+        autosize:true,
+        margin: {
+            //l: 50,
+            //r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+          }
+    };
+
+    Plotly.newPlot('heatDiv', data, layout);
+}
+function make_bar_chart(){
+    var trace1 = {
+        x: ['giraffes', 'orangutans', 'monkeys'],
+        y: [20, 14, 23],
+        name: 'SF Zoo',
+        type: 'bar'
+    };
+      
+    var trace2 = {
+      x: ['giraffes', 'orangutans', 'monkeys'],
+      y: [12, 18, 29],
+      name: 'LA Zoo',
+      type: 'bar'
+    };
+      
+    var data = [trace1, trace2];
+    
+    var layout = {
+        autosize:true,
+        barmode: 'group',
+        margin: {
+            //l: 50,
+            //r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+          }
+    };
+    
+    Plotly.newPlot('barchartDiv', data, layout);
+}
+function make_line_chart(){
+    var trace1 = {
+        x: [1, 2, 3, 4],
+        y: [0, 2, 3, 5],
+        fill: 'tozeroy',
+        type: 'scatter'
+      };
+      
+      var trace2 = {
+        x: [1, 2, 3, 4],
+        y: [3, 5, 1, 7],
+        fill: 'tonexty',
+        type: 'scatter'
+      };
+      var layout = {
+        autosize:true,
+        barmode: 'group',
+        margin: {
+            //l: 50,
+            //r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+          }
+    };
+      var data = [trace1, trace2];
+      
+      Plotly.newPlot('linechartDiv', data, layout);
+}
 function input_onchange(element){
     let name = element.target.id
     let val = element.target.value
@@ -139,3 +254,4 @@ var display_type = 'Rain'
 var month = 6
 var year = 2022
 make_left_page()
+make_right_page()
