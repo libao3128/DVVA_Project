@@ -12,11 +12,16 @@ function make_left_page(){
     var button = document.createElement("BUTTON");
     button.innerHTML = 'Rain';
     button.className = 'DisplayButton leftButton'
+    button.id = 'rain_button'
+    button.onclick = button_onclick
+    button.style.backgroundColor = 'rgba(1, 131, 186, 0.18)'
     buttonDiv.appendChild(button)
 
     var button = document.createElement("BUTTON");
     button.innerHTML = 'Temperature';
     button.className = 'DisplayButton rightButton'
+    button.id = 'temp_button'
+    button.onclick = button_onclick
     buttonDiv.appendChild(button)
 
 
@@ -25,33 +30,7 @@ function make_left_page(){
     mapDiv.id = 'mapDiv'
     mapDiv.style.height = '80%'
     myDiv.appendChild(mapDiv)
-    var data = [
-        {
-            type: "scattermapbox",
-            fill: "toself",
-            lon: [121, 121, 120, 120],
-            lat: [23, 22.5, 23, 22.5],
-            marker: { size: 10, color: "orange" }
-        }
-    ];
-    
-    var layout = {
-        mapbox: {
-            style: "stamen-terrain",
-            center: { lon: 120.9738819, lat: 23.97565 },
-            zoom: 6.5
-        },
-        showlegend: false,
-        autosize:true,
-        //height: 770,
-        //width: 600,
-        margin:{
-            b: 50,
-            t: 50,
-        }
-    };
-    
-    Plotly.newPlot("mapDiv", data, layout);
+    make_map()
 
 
     //Build Input Bar
@@ -113,6 +92,35 @@ function make_left_page(){
 
     year_barDiv.appendChild(year_labelDiv)
     
+}
+function make_map(){
+    var data = [
+        {
+            type: "scattermapbox",
+            fill: "toself",
+            lon: [121, 121, 120, 120],
+            lat: [23, 22.5, 23, 22.5],
+            marker: { size: 10, color: "orange" }
+        }
+    ];
+    
+    var layout = {
+        mapbox: {
+            style: "stamen-terrain",
+            center: { lon: 120.9738819, lat: 23.97565 },
+            zoom: 6.5
+        },
+        showlegend: false,
+        autosize:true,
+        //height: 770,
+        //width: 600,
+        margin:{
+            b: 50,
+            t: 50,
+        }
+    };
+    
+    Plotly.newPlot("mapDiv", data, layout);
 }
 function make_right_page(){
     let rightDiv = document.getElementsByClassName('right-page')[0]
@@ -242,6 +250,22 @@ function input_onchange(element){
     }
     
 }
+function button_onclick(element){
+    let name = element.target.id
+    var rain_button = document.getElementById('rain_button')
+    var temp_button = document.getElementById('temp_button')
+    if (name.includes('rain')){
+        display_type = 'Rain'
+        rain_button.style.backgroundColor = 'rgba(1, 131, 186, 0.18)'
+        temp_button.style.backgroundColor = '#fafafa'
+        rain_button.className = ' DisplayButton leftButton'
+    }
+    if (name.includes('temp')){
+        display_type = 'Temperature'
+        rain_button.style.backgroundColor = '#fafafa'
+        temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
+    }
+}
 
 function getMonthName(monthNumber) {
     const date = new Date();
@@ -249,6 +273,13 @@ function getMonthName(monthNumber) {
   
     return date.toLocaleString('en-US', { month: 'short' });
 }
+
+function getMapData(year, month, type){
+    // year: int, month: int
+    // type= 'Rain' or 'Temperature'
+    // retrun the data of 'type' value and its 'WGS84_Lon' and 'WGS84_Lat'
+}
+
   
 var display_type = 'Rain'
 var month = 6

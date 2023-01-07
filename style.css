@@ -40,11 +40,10 @@ html, body {
 }
 .leftButton{
     border-radius: 15px 0px 0px 15px;
-    border-color:  rgba(1, 130, 186, 0.685);
-    
+    border-color:  rgba(1, 130, 186, 0.685); 
 }
 .leftButton:hover{
-    background-color: rgba(1, 131, 186, 0.18);
+    background-color: rgba(1, 131, 186, 0.18) !important;
 }
 
 .rightButton{
@@ -53,5 +52,5 @@ html, body {
     
 }
 .rightButton:hover{
-    background-color: rgba(255, 157, 136, 0.18);
+    background-color: rgba(255, 157, 136, 0.18) !important;
 }
