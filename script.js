@@ -277,7 +277,14 @@ function getMonthName(monthNumber) {
 function getMapData(year, month, type){
     // year: int, month: int
     // type= 'Rain' or 'Temperature'
-    // retrun the data of 'type' value and its 'WGS84_Lon' and 'WGS84_Lat'
+    // retrun the data of ['type' value] and its ['WGS84_Lon'] and ['WGS84_Lat']
+}
+function getHeatData(lon, lat, type){
+    // lon: WGS84_Lon, lat: WGS84_Lat
+    // type= 'Rain' or 'Temperature'
+    // return the history data of 'type' value
+
+
 }
 
   
