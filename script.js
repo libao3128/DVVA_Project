@@ -287,9 +287,13 @@ function getMapData(year, month, type){
 function getHeatData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
-    // return the history data of 'type' value
-
-
+    // return [Year, Month, value]
+}
+function getYearData(lon, lat, year, type){
+    // lon: WGS84_Lon, lat: WGS84_Lat
+    // year: if year is -1, return the average of all history data
+    // type= 'Rain' or 'Temperature'
+    // return [Month, value]
 }
 
   
