@@ -32,6 +32,11 @@ function make_left_page(){
     myDiv.appendChild(mapDiv)
     make_map()
 
+    // new add
+    mapDiv.on('plotly_click', function(data){
+        alert(''+data.points[0].lon+'\n'+data.points[0].lat);
+    });
+
 
     //Build Input Bar
     let barDiv = document.createElement('div')
