@@ -163,22 +163,22 @@ function make_right_page(){
     rightDiv.appendChild(linechartDiv)
     make_line_chart()
 }
-function make_heat_map(){
-    y = [...Array(12).keys()].map(function(number) {
-        return getMonthName(number + 1);
-      })
+async function make_heat_map(){
+    // y = [...Array(12).keys()].map(function(number) {
+    //     return getMonthName(number + 1);
+    //   })
     
-    console.log(y)
-    getHeatData(120.4, 23.45, "Temperature");
-    var data = [
-      {
-        z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
-        x: ['123f','f123','1s23','12a3','12s3'],
-        y: ['Jan', 'Feb', 'Mar'],
-        type: 'heatmap',
-        hoverongaps: false
-      }
-    ];
+    // console.log(y)
+    var data = await this.getHeatData(120.4, 23.45, "Temperature");
+    // var data = [
+    //   {
+    //     z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
+    //     x: ['123f','f123','1s23','12a3','12s3'],
+    //     y: ['Jan', 'Feb', 'Mar'],
+    //     type: 'heatmap',
+    //     hoverongaps: false
+    //   }
+    // ];
     var layout = {
         autosize:true,
         margin: {
@@ -303,7 +303,7 @@ async function getMapData(year, month, type){
     return await fetch('https://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Rain&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
-        console.log(data['Result'])
+        // console.log(data['Result'])
         //var processed_data = []
         /*
         data['Result'].forEach(element => {
@@ -326,7 +326,7 @@ async function getMapData(year, month, type){
             colorscale: scl,
         }];
         
-        console.log(processed_data)
+        // console.log(processed_data)
         return processed_data
     })
     .catch((error)=>{
@@ -340,14 +340,13 @@ async function getMapData(year, month, type){
     // type= 'Rain' or 'Temperature'
     // retrun the data of ['type' value] and its ['WGS84_Lon'] and ['WGS84_Lat']
 }
-function getHeatData(lon, lat, type){
+async function getHeatData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
     // return [Year, Month, value]
-    fetch('https://exodus.tw/api/getDataByLoc.php?lon=120.4&lat=23.45&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    return await fetch('https://exodus.tw/api/getDataByLoc.php?lon=120.4&lat=23.45&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
-        console.log(data)
         var processed_data = {
             z: [],
             x: [],
@@ -355,25 +354,24 @@ function getHeatData(lon, lat, type){
             type: 'heatmap',
             hoverongaps: false
         };
-        let cnt = 0;
+        let cnt = 0, first = 1;
         data['Result'].forEach(element => {
             
-            // if (!processed_data.x.includes(element.Year)) {
-            //     processed_data.x.push(element.Year);
-            // }
-            // cnt += 1;
-            // if (cnt > 12 || cnt == 1) {
-            //     cnt = 1;
-            //     let val = [element.TempValue];
-            //     processed_data.z.push(val);
-            // } else {
-            //     processed_data.z[processed_data.z.length - 1].push(element.TempValue);
-            // }
-            console.log(element.TempValue)
+            if (!processed_data.x.includes(element.Year)) {
+                processed_data.x.push(element.Year);
+            }
+            cnt += 1;
+            if (cnt > 12) {
+                cnt = 1;
+                first = 0;
+                processed_data.z[cnt-1].push(parseInt(element.Value, 10));
+            } else if (first == 1) {
+                processed_data.z.push([parseInt(element.Value, 10)]);
+            } else {
+                processed_data.z[cnt-1].push(parseInt(element.Value, 10));
+            }
         })
-        console.log(processed_data.z)
-        // console.log(processed_data)
-        // return processed_data
+        return [processed_data]
     })
     .catch((error)=>{
         console.log(error)
