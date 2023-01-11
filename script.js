@@ -159,6 +159,7 @@ function make_heat_map(){
       })
     
     console.log(y)
+    getHeatData(120.4, 23.45, "Temperature");
     var data = [
       {
         z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
@@ -308,6 +309,42 @@ function getHeatData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
     // return [Year, Month, value]
+    fetch('https://exodus.tw/api/getDataByLoc.php?lon=120.4&lat=23.45&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    .then(function(response){return response.json()} )
+    .then(function(data) {
+        console.log(data)
+        var processed_data = {
+            z: [],
+            x: [],
+            y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            type: 'heatmap',
+            hoverongaps: false
+        };
+        let cnt = 0;
+        data['Result'].forEach(element => {
+            
+            // if (!processed_data.x.includes(element.Year)) {
+            //     processed_data.x.push(element.Year);
+            // }
+            // cnt += 1;
+            // if (cnt > 12 || cnt == 1) {
+            //     cnt = 1;
+            //     let val = [element.TempValue];
+            //     processed_data.z.push(val);
+            // } else {
+            //     processed_data.z[processed_data.z.length - 1].push(element.TempValue);
+            // }
+            console.log(element.TempValue)
+        })
+        console.log(processed_data.z)
+        // console.log(processed_data)
+        // return processed_data
+    })
+    .catch((error)=>{
+        console.log(error)
+        alert('fetch error')
+        return []
+    })
 }
 function getYearData(lon, lat, year, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
