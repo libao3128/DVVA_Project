@@ -113,13 +113,16 @@ async function make_map(){
             t: 50,
         },
         colorbar: true,
+        title:display_type+' scatter'
     };
     var data = await this.getMapData(year, month, display_type)
 
     Plotly.newPlot("mapDiv", data, layout);
     // new add
     mapDiv.on('plotly_click', function(data){
-        alert(''+data.points[0].lon+'\n'+data.points[0].lat);
+        
+        selected_location = [data.points[0].lon, data.points[0].lat]
+        make_heat_map()
     });
     //console.log('data',data)
    
@@ -331,7 +334,7 @@ async function getMapData(year, month, type){
         console.log(error)
         alert('fetch error')
         return []
->>>>>>> eebbd2f7999c491cc2dde57d6ad7b341134dbfb7
+
     })
     
     //http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6
@@ -343,7 +346,7 @@ async function getHeatData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
     // return [Year, Month, value]
-    return await fetch(`https://exodus.tw/api/getDataByLoc.php?lon=${123}&lat=${123}&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
+    return await fetch('https://exodus.tw/api/getDataByLoc.php?lon='+String(selected_location[0])+'&lat='+String(selected_location[1])+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
         var processed_data = {
@@ -420,6 +423,7 @@ async function getYearData(lon, lat, type){
 var display_type = 'Rain'
 var month = 6
 var year = 2020
+var selected_location = [120.4, 23.5]
 
 make_left_page()
 make_right_page()
