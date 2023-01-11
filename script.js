@@ -99,6 +99,7 @@ function make_left_page(){
     
 }
 function make_map(){
+    getMapData(year, month, display_type)
     var data = [
         {
             type: "scattermapbox",
@@ -280,6 +281,25 @@ function getMonthName(monthNumber) {
 }
 
 function getMapData(year, month, type){
+    
+    fetch('http://exodus.tw/api/getDataByMonth.php',headers={
+        'year':year,
+        'month':month,
+       'type':type,
+        'apikey':'sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6'
+    })
+    
+    //fetch('http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    .then((response)=>{
+        alert('fetch success')
+        return response
+
+    })
+    .catch((error)=>{
+        console.log(error)
+        alert('fetch error')
+    })
+    //http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6
     // year: int, month: int
     // type= 'Rain' or 'Temperature'
     // retrun the data of ['type' value] and its ['WGS84_Lon'] and ['WGS84_Lat']
