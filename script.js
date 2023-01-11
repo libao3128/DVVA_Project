@@ -30,12 +30,9 @@ function make_left_page(){
     mapDiv.id = 'mapDiv'
     mapDiv.style.height = '80%'
     myDiv.appendChild(mapDiv)
-    make_map()
+    make_map(mapDiv)
 
-    // new add
-    mapDiv.on('plotly_click', function(data){
-        alert(''+data.points[0].lon+'\n'+data.points[0].lat);
-    });
+    
 
 
     //Build Input Bar
@@ -98,18 +95,9 @@ function make_left_page(){
     year_barDiv.appendChild(year_labelDiv)
     
 }
-function make_map(){
-    getMapData(year, month, display_type)
-    var data = [
-        {
-            type: "scattermapbox",
-            fill: "toself",
-            lon: [121, 121, 120, 120],
-            lat: [23, 22.5, 23, 22.5],
-            marker: { size: 10, color: "orange" }
-        }
-    ];
+async function make_map(mapDiv){
     
+
     var layout = {
         mapbox: {
             style: "stamen-terrain",
@@ -125,8 +113,30 @@ function make_map(){
             t: 50,
         }
     };
-    
+    var data = await this.getMapData(year, month, display_type)
+
     Plotly.newPlot("mapDiv", data, layout);
+    // new add
+    mapDiv.on('plotly_click', function(data){
+        alert(''+data.points[0].lon+'\n'+data.points[0].lat);
+    });
+    //console.log('data',data)
+   
+  
+    /*
+    var data = [
+        {
+            type: "scattermapbox",
+            fill: "toself",
+            lon: [121, 121, 120, 120],
+            lat: [23, 22.5, 23, 22.5],
+            marker: { size: 10, color: "orange" }
+        }
+    ];*/
+    
+    
+    
+    
 }
 function make_right_page(){
     let rightDiv = document.getElementsByClassName('right-page')[0]
@@ -280,25 +290,50 @@ function getMonthName(monthNumber) {
     return date.toLocaleString('en-US', { month: 'short' });
 }
 
-function getMapData(year, month, type){
-    
-    fetch('http://exodus.tw/api/getDataByMonth.php',headers={
-        'year':year,
-        'month':month,
+async function getMapData(year, month, type){
+    /*
+    fetch('https://exodus.tw/api/getDataByMonth.php',headers={
+        'year':String(year),
+        'month':String(month),
        'type':type,
         'apikey':'sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6'
     })
-    
-    //fetch('http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
-    .then((response)=>{
-        alert('fetch success')
-        return response
-
+    */
+    return await fetch('https://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Rain&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    .then(function(response){return response.json()} )
+    .then(function(data) {
+        console.log(data['Result'])
+        //var processed_data = []
+        /*
+        data['Result'].forEach(element => {
+            let new_data_point = {
+                type: "scattermapbox",
+                fill: "toself",
+                lon: [element.Lon-0.25, element.Lon-0.25, element.Lon+0.25, element.Lon+0.25],
+                lat: [element.Lat-0.25, element.Lat+0.25, element.Lat+0.25, element.Lat-0.25],
+                marker: { size: 10, color: element.TempValue}
+            }
+            processed_data.push(new_data_point)
+            
+        })
+        */
+        var scl = [[0,'rgb(5, 10, 172)'],[0.35,'rgb(40, 60, 190)'],[0.5,'rgb(70, 100, 245)'], [0.6,'rgb(90, 120, 245)'],[0.7,'rgb(106, 137, 247)'],[1,'rgb(220, 220, 220)']];
+        var processed_data = [{
+            type: 'scattermapbox',
+            lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
+            marker: {color: data['Result'].map(a=>a.Value), size: 10},
+            colorscale: scl,
+        }];
+        
+        console.log(processed_data)
+        return processed_data
     })
     .catch((error)=>{
         console.log(error)
         alert('fetch error')
+        return []
     })
+    
     //http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6
     // year: int, month: int
     // type= 'Rain' or 'Temperature'
