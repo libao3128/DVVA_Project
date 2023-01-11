@@ -122,7 +122,11 @@ async function make_map(){
     mapDiv.on('plotly_click', function(data){
         
         selected_location = [data.points[0].lon, data.points[0].lat]
+        make_map()
+        make_line_chart()
+        make_bar_chart()
         make_heat_map()
+        
     });
     //console.log('data',data)
    
@@ -167,13 +171,15 @@ function make_right_page(){
     rightDiv.appendChild(linechartDiv)
     make_line_chart()
 }
+
+
 async function make_heat_map(){
     // y = [...Array(12).keys()].map(function(number) {
     //     return getMonthName(number + 1);
     //   })
     
     // console.log(y)
-    var data = await this.getHeatData(120.4, 23.45, "Temperature");
+    var data = await this.getHeatData();
     // var data = [
     //   {
     //     z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
@@ -191,13 +197,15 @@ async function make_heat_map(){
             b: 50,
             t: 50,
             pad: 4
-          }
+          },
+        title:'Selected Location '+display_type+' Heat Map'
     };
 
     Plotly.newPlot('heatDiv', data, layout);
 }
 async function make_bar_chart(){
     var data = await this.getYearData(120.4, 23.45, 'Rain');
+    
     
     var layout = {
         autosize:true,
@@ -208,7 +216,9 @@ async function make_bar_chart(){
             b: 50,
             t: 50,
             pad: 4
-          }
+        },
+        title:'Selected Location Average Rain Drop'
+    
     };
     
     Plotly.newPlot('barchartDiv', data, layout);
@@ -225,7 +235,8 @@ async function make_line_chart(){
             b: 50,
             t: 50,
             pad: 4
-        }
+        },
+        title:'Selected Location Average Temperature'
     };
       
     Plotly.newPlot('linechartDiv', data, layout);
@@ -262,6 +273,7 @@ function button_onclick(element){
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
     make_map()
+    make_heat_map()
 }
 
 function getMonthName(monthNumber) {
@@ -272,7 +284,7 @@ function getMonthName(monthNumber) {
 }
 
 
-async function getMapData(year, month, type){
+async function getMapData(){
     /*
     fetch('https://exodus.tw/api/getDataByMonth.php',headers={
         'year':String(year),
@@ -281,7 +293,7 @@ async function getMapData(year, month, type){
         'apikey':'sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6'
     })
     */
-    return await fetch(`https://exodus.tw/api/getDataByMonth.php?year=${year}&month=${month}&type=${type}&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
+    return await fetch(`https://exodus.tw/api/getDataByMonth.php?year=${year}&month=${month}&type=${display_type}&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
     .then(function(response){return response.json()} )
     .then(function(data) {
         // console.log(data['Result'])
@@ -306,12 +318,22 @@ async function getMapData(year, month, type){
         var processed_data = [{
             type: 'scattermapbox',
             lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
-            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[type],  colorbar: {
-                title: type
-            }},
+            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],  colorbar: {
+                title: display_type
+            }, opacity:0.8},
             text:  data['Result'].map(a=>a.Value),
-            
-        }];
+            name:display_type
+        },
+            {
+                type: 'scattermapbox',
+                lon: [selected_location[0]], lat: [selected_location[1]],
+                marker: {color: 'yellow', size: 20, 
+                },
+                
+            }
+
+    
+        ];
         
         // console.log(processed_data)
         return processed_data
@@ -328,11 +350,11 @@ async function getMapData(year, month, type){
     // type= 'Rain' or 'Temperature'
     // retrun the data of ['type' value] and its ['WGS84_Lon'] and ['WGS84_Lat']
 }
-async function getHeatData(lon, lat, type){
+async function getHeatData(){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
     // return [Year, Month, value]
-    return await fetch('https://exodus.tw/api/getDataByLoc.php?lon='+String(selected_location[0])+'&lat='+String(selected_location[1])+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    return await fetch('https://exodus.tw/api/getDataByLoc.php?lon='+String(selected_location[0])+'&lat='+String(selected_location[1])+'&type='+display_type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
         var processed_data = {
@@ -372,7 +394,7 @@ async function getYearData(lon, lat, type){
     // year: if year is -1, return the average of all history data
     // type= 'Rain' or 'Temperature'
     // return [Month, value]
-    return await fetch('https://exodus.tw/api/getYearDataByLoc.php?lon='+lon+'&lat='+lat+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    return await fetch('https://exodus.tw/api/getYearDataByLoc.php?lon='+selected_location[0]+'&lat='+selected_location[1]+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
         console.log(data['Result'])
@@ -389,21 +411,24 @@ async function getYearData(lon, lat, type){
             var line1 = {
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.Value),
-                type: 'scatter'
+                type: 'scatter',
+                name: 'average'
             };
             
             var line2 = {
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.MaxValue),
-                type: 'scatter'
+                type: 'scatter',
+                name:'max'
             };
             
             var line3 = {
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.MinValue),
-                type: 'scatter'
+                type: 'scatter',
+                name: 'min'
             };
-            var processed_data = [line1, line2, line3];
+            var processed_data = [line2, line1, line3];
         }
         
         console.log(processed_data)
