@@ -76,8 +76,8 @@ function make_left_page(){
     var year_bar = document.createElement('input')
     year_bar.type = 'range'
     year_bar.id = 'year_bar'
-    year_bar.min = 1990
-    year_bar.max = 2022
+    year_bar.min = 1960
+    year_bar.max = 2020
     year_bar.step = 1
     year_bar.value = String(year)
     year_bar.style.width = '75%'
@@ -95,8 +95,8 @@ function make_left_page(){
     year_barDiv.appendChild(year_labelDiv)
     
 }
-async function make_map(mapDiv){
-    
+async function make_map(){
+    let mapDiv = document.getElementById('mapDiv')
 
     var layout = {
         mapbox: {
@@ -111,7 +111,8 @@ async function make_map(mapDiv){
         margin:{
             b: 50,
             t: 50,
-        }
+        },
+        colorbar: true,
     };
     var data = await this.getMapData(year, month, display_type)
 
@@ -264,6 +265,7 @@ function input_onchange(element){
         label.textContent = String(getMonthName(val))
         month = val
     }
+    make_map()
     
 }
 function button_onclick(element){
@@ -281,6 +283,7 @@ function button_onclick(element){
         rain_button.style.backgroundColor = '#fafafa'
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
+    make_map()
 }
 
 function getMonthName(monthNumber) {
@@ -299,7 +302,7 @@ async function getMapData(year, month, type){
         'apikey':'sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6'
     })
     */
-    return await fetch('https://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Rain&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    return await fetch(`https://exodus.tw/api/getDataByMonth.php?year=${year}&month=${month}&type=${type}&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
     .then(function(response){return response.json()} )
     .then(function(data) {
         console.log(data['Result'])
@@ -317,12 +320,18 @@ async function getMapData(year, month, type){
             
         })
         */
-        var scl = [[0,'rgb(5, 10, 172)'],[0.35,'rgb(40, 60, 190)'],[0.5,'rgb(70, 100, 245)'], [0.6,'rgb(90, 120, 245)'],[0.7,'rgb(106, 137, 247)'],[1,'rgb(220, 220, 220)']];
+        var scl = {
+            'Rain':[ [0,'rgb(255, 255, 255)'], [1,'rgb(5, 10, 172)']],
+            'Temperature':[[0,'rgb(5, 10, 172)'], [0.5, 'white'], [1,'rgb(255, 10, 5)'],]
+        }
         var processed_data = [{
             type: 'scattermapbox',
             lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
-            marker: {color: data['Result'].map(a=>a.Value), size: 10},
-            colorscale: scl,
+            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[type],  colorbar: {
+                title: type
+            }},
+            text:  data['Result'].map(a=>a.Value),
+            
         }];
         
         console.log(processed_data)
@@ -354,6 +363,7 @@ function getYearData(lon, lat, year, type){
   
 var display_type = 'Rain'
 var month = 6
-var year = 2022
+var year = 2020
+var location = (NaN, NaN)
 make_left_page()
 make_right_page()
