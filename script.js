@@ -282,17 +282,7 @@ function getMonthName(monthNumber) {
     return date.toLocaleString('en-US', { month: 'short' });
 }
 
-<<<<<<< HEAD
-function getMapData(year, month, type){
-    
-    fetch('https://exodus.tw/api/getDataByMonth.php?year='+year+'&month='+month+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
-    .then((response)=>{
-        return response
 
-    })
-    .catch((error)=>{
-        console.log(error)
-=======
 async function getMapData(year, month, type){
     /*
     fetch('https://exodus.tw/api/getDataByMonth.php',headers={
