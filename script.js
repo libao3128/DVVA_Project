@@ -353,7 +353,7 @@ async function getHeatData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // type= 'Rain' or 'Temperature'
     // return [Year, Month, value]
-    return await fetch(`https://exodus.tw/api/getDataByLoc.php?lon=${selected_location[0]}&lat=${selected_location[1]}&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
+    return await fetch(`https://exodus.tw/api/getDataByLoc.php?lon=${123}&lat=${123}&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6`)
     .then(function(response){return response.json()} )
     .then(function(data) {
         var processed_data = {
@@ -399,5 +399,6 @@ function getYearData(lon, lat, year, type){
 var display_type = 'Rain'
 var month = 6
 var year = 2020
+
 make_left_page()
 make_right_page()
