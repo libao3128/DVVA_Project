@@ -224,21 +224,10 @@ function make_bar_chart(){
     
     Plotly.newPlot('barchartDiv', data, layout);
 }
-function make_line_chart(){
-    var trace1 = {
-        x: [1, 2, 3, 4],
-        y: [0, 2, 3, 5],
-        fill: 'tozeroy',
-        type: 'scatter'
-      };
-      
-      var trace2 = {
-        x: [1, 2, 3, 4],
-        y: [3, 5, 1, 7],
-        fill: 'tonexty',
-        type: 'scatter'
-      };
-      var layout = {
+async function make_line_chart(){
+    var data = await this.getYearData(120.4, 23.45, 'Temperature');
+
+    var layout = {
         autosize:true,
         barmode: 'group',
         margin: {
@@ -247,11 +236,10 @@ function make_line_chart(){
             b: 50,
             t: 50,
             pad: 4
-          }
+        }
     };
-      var data = [trace1, trace2];
       
-      Plotly.newPlot('linechartDiv', data, layout);
+    Plotly.newPlot('linechartDiv', data, layout);
 }
 function input_onchange(element){
     let name = element.target.id
@@ -294,6 +282,17 @@ function getMonthName(monthNumber) {
     return date.toLocaleString('en-US', { month: 'short' });
 }
 
+<<<<<<< HEAD
+function getMapData(year, month, type){
+    
+    fetch('https://exodus.tw/api/getDataByMonth.php?year='+year+'&month='+month+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    .then((response)=>{
+        return response
+
+    })
+    .catch((error)=>{
+        console.log(error)
+=======
 async function getMapData(year, month, type){
     /*
     fetch('https://exodus.tw/api/getDataByMonth.php',headers={
@@ -342,6 +341,7 @@ async function getMapData(year, month, type){
         console.log(error)
         alert('fetch error')
         return []
+>>>>>>> eebbd2f7999c491cc2dde57d6ad7b341134dbfb7
     })
     
     //http://exodus.tw/api/getDataByMonth.php?year=2015&month=3&type=Temperature&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6
@@ -388,11 +388,42 @@ async function getHeatData(lon, lat, type){
         return []
     })
 }
-function getYearData(lon, lat, year, type){
+async function getYearData(lon, lat, type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // year: if year is -1, return the average of all history data
     // type= 'Rain' or 'Temperature'
     // return [Month, value]
+    return await fetch('https://exodus.tw/api/getYearDataByLoc.php?lon='+lon+'&lat='+lat+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
+    .then(function(response){return response.json()} )
+    .then(function(data) {
+        console.log(data['Result'])
+        
+        var line1 = {
+            x: data['Result'].map(x => x.Year),
+            y: data['Result'].map(x => x.Value),
+            type: 'scatter'
+        };
+        
+        var line2 = {
+            x: data['Result'].map(x => x.Year),
+            y: data['Result'].map(x => x.MaxValue),
+            type: 'scatter'
+        };
+        
+        var line3 = {
+            x: data['Result'].map(x => x.Year),
+            y: data['Result'].map(x => x.MinValue),
+            type: 'scatter'
+        };
+        var processed_data = [line1, line2, line3];
+        
+        console.log(processed_data)
+        return processed_data
+    })
+    .catch((error)=>{
+        console.log(error)
+        return []
+    })
 }
 
   
