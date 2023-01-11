@@ -196,22 +196,8 @@ async function make_heat_map(){
 
     Plotly.newPlot('heatDiv', data, layout);
 }
-function make_bar_chart(){
-    var trace1 = {
-        x: ['giraffes', 'orangutans', 'monkeys'],
-        y: [20, 14, 23],
-        name: 'SF Zoo',
-        type: 'bar'
-    };
-      
-    var trace2 = {
-      x: ['giraffes', 'orangutans', 'monkeys'],
-      y: [12, 18, 29],
-      name: 'LA Zoo',
-      type: 'bar'
-    };
-      
-    var data = [trace1, trace2];
+async function make_bar_chart(){
+    var data = await this.getYearData(120.4, 23.45, 'Rain');
     
     var layout = {
         autosize:true,
@@ -391,24 +377,34 @@ async function getYearData(lon, lat, type){
     .then(function(data) {
         console.log(data['Result'])
         
-        var line1 = {
-            x: data['Result'].map(x => x.Year),
-            y: data['Result'].map(x => x.Value),
-            type: 'scatter'
-        };
-        
-        var line2 = {
-            x: data['Result'].map(x => x.Year),
-            y: data['Result'].map(x => x.MaxValue),
-            type: 'scatter'
-        };
-        
-        var line3 = {
-            x: data['Result'].map(x => x.Year),
-            y: data['Result'].map(x => x.MinValue),
-            type: 'scatter'
-        };
-        var processed_data = [line1, line2, line3];
+        if(type == 'Rain'){
+            var bar1 = {
+                x: data['Result'].map(x => x.Year),
+                y: data['Result'].map(x => x.Value),
+                name: 'Rain',
+                type: 'bar'
+            };
+            var processed_data = [bar1];
+        }else if(type == 'Temperature'){
+            var line1 = {
+                x: data['Result'].map(x => x.Year),
+                y: data['Result'].map(x => x.Value),
+                type: 'scatter'
+            };
+            
+            var line2 = {
+                x: data['Result'].map(x => x.Year),
+                y: data['Result'].map(x => x.MaxValue),
+                type: 'scatter'
+            };
+            
+            var line3 = {
+                x: data['Result'].map(x => x.Year),
+                y: data['Result'].map(x => x.MinValue),
+                type: 'scatter'
+            };
+            var processed_data = [line1, line2, line3];
+        }
         
         console.log(processed_data)
         return processed_data
