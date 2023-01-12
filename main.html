@@ -78,33 +78,38 @@
             <div class="container-xxl flex-grow-1 container-p-y">
                 <h2 class="fw-bold py-3 mb-4">Climate Change in Taiwan</h2>
                 <div class="row">
-                    <div class="col-lg-6 mb-4">
+                    <div class="col-lg-6 mb-4 order-0">
+                      <div class="col mb-4">
                         <div class="card">
                             <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="card-body">
-                                    <form name="settings">
-                                      <div class="d-grid gap-2 col-lg-6 mx-auto">
-                                        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                          <input type="radio" class="btn-check" name="type" id="t1" value="Rain" autocomplete="off" checked>
-                                          <label class="btn btn-outline-info" style="width: 180px;" for="t1">RAIN</label>
-                                          <input type="radio" class="btn-check" name="type" id="t2" value="Temperature" autocomplete="off">
-                                          <label class="btn btn-outline-danger" style="width: 180px;" for="t2">TEMPERATURE</label>
-                                        </div>
-                                      </div>
-                                    </form>
-                                    
-                                    <div class="left-page"></div>
-                                    <form name="ranges">
-                                        <label for="month_bar" class="form-label">Month</label>
-                                        <input type="range" class="form-range" id="month_bar">
-                                        <div class="text-end" id="month_bar_label"></div>
-                                        <label for="year_bar" class="form-label">Year</label>
-                                        <input type="range" class="form-range" id="year_bar">
-                                        <div class="text-end" id="year_bar_label"></div>
-                                    </form>
-                                </div>
+                              <div class="card-body">
+                                <form name="settings">
+                                  <div class="d-flex align-items-center justify-content-between">
+                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group" style="padding-left: 135px;">
+                                      <input type="radio" class="btn-check" name="type" id="t1" value="Rain" autocomplete="off" checked>
+                                      <label class="btn btn-outline-info" style="width: 180px;" for="t1">RAIN</label>
+                                      <input type="radio" class="btn-check" name="type" id="t2" value="Temperature" autocomplete="off">
+                                      <label class="btn btn-outline-danger" style="width: 180px;" for="t2">TEMPERATURE</label>
+                                    </div>
+                                    <div class="spinner-border spinner-border-sm text-secondary" role="status" id="map_load">
+                                      <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                  </div>
+                                </form>
+                                
+                                <div class="left-page"></div>
+                                <form name="ranges">
+                                    <label for="month_bar" class="form-label">Month</label>
+                                    <input type="range" class="form-range" id="month_bar">
+                                    <div class="text-end" id="month_bar_label"></div>
+                                    <label for="year_bar" class="form-label">Year</label>
+                                    <input type="range" class="form-range" id="year_bar">
+                                    <div class="text-end" id="year_bar_label"></div>
+                                </form>
+                              </div>
                             </div>
                         </div>
+                      </div>
                     </div>
                     <div class="col-lg-6 mb-4 order-0">
                             <div class="row">
