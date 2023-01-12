@@ -507,7 +507,7 @@ function button_onclick(element){
         rain_button.style.backgroundColor = '#fafafa'
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
-    make_map()
+    update_map()
     make_heat_map()
 }
 
@@ -553,7 +553,7 @@ async function getMapData(){
         }
         var cmax = {
             'Rain':30,
-            'Temperature':30
+            'Temperature':35
         }
         var processed_data = [{
             type: 'scattermapbox',
