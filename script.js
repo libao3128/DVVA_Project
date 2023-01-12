@@ -516,9 +516,8 @@ function button_onclick(element){
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
     update_map()
-    make_heat_map()
+    update_heat_map()
 }
-
 function getMonthName(monthNumber) {
     const date = new Date();
     date.setMonth(monthNumber - 1);
