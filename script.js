@@ -105,12 +105,12 @@ async function make_map(){
         mapbox: {
             style: "stamen-terrain",
             center: { lon: 120.9738819, lat: 23.97565 },
-            zoom: 6.5
+            zoom: 6
         },
         showlegend: false,
         autosize:true,
-        //height: 770,
-        //width: 600,
+        height: 600,
+        width: 600,
         margin:{
             b: 50,
             t: 50,
@@ -221,13 +221,15 @@ async function make_heat_map(){
     cur_heatdata = JSON.parse(JSON.stringify( await this.getHeatData()));
     var layout = {
         autosize:true,
+        width: 600,
+        height: 300,
         margin: {
             //l: 50,
             //r: 50,
-            b: 50,
-            t: 50,
+            b: 25,
+            t: 25,
             pad: 4
-          },
+        },
         title:'Selected Location '+display_type+' Heat Map'
     };
 
@@ -283,11 +285,13 @@ async function make_bar_chart(){
             }
         },
         barmode: 'group',
+        width: 600,
+        height: 150,
         margin: {
             //l: 50,
             //r: 50,
-            b: 50,
-            t: 50,
+            b: 25,
+            t: 25,
             pad: 4
         },
         title:'Selected Location Cummulative Rain Drop'
@@ -341,11 +345,13 @@ async function make_line_chart(){
             }
         },
         barmode: 'group',
+        width: 600,
+        height: 150,
         margin: {
             //l: 50,
             //r: 50,
-            b: 50,
-            t: 50,
+            b: 25,
+            t: 25,
             pad: 4
         },
         title:'Selected Location Average Temperature'
