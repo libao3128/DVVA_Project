@@ -268,7 +268,12 @@ async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
     var layout = {
-        yaxis: {range: [0, Math.max(...data[0].y)+100]},
+        yaxis: {
+            range: [0, Math.max(...data[0].y)+100],
+            title: {
+                text: 'mm'
+            }
+        },
         barmode: 'group',
         margin: {
             //l: 50,
@@ -320,7 +325,12 @@ async function make_line_chart(){
     var data = await this.getYearData('Temperature');
 
     var layout = {
-        yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]},
+        yaxis: {
+            range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2],
+            title: {
+                text: '\xB0C'
+            }
+        },
         barmode: 'group',
         margin: {
             //l: 50,
@@ -529,7 +539,7 @@ async function getMapData(){
     
         ];
         
-        console.log(pinvalue);
+        // console.log(pinvalue);
 
         // console.log(processed_data)
         return processed_data
