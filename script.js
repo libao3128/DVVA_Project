@@ -127,7 +127,7 @@ async function make_map(){
         make_map()
         make_line_chart()
         update_bar_chart()
-        make_heat_map()
+        update_heat_map()
         
     });
     //console.log('data',data)
@@ -297,23 +297,9 @@ function make_right_page(){
     make_line_chart()
 }
 
-
+var prev_heatdata, cur_heatdata;
 async function make_heat_map(){
-    // y = [...Array(12).keys()].map(function(number) {
-    //     return getMonthName(number + 1);
-    //   })
-    
-    // console.log(y)
-    var data = await this.getHeatData();
-    // var data = [
-    //   {
-    //     z: [[1, 30, 30, 50, 1], [20, 1, 60, 80, 30], [30, 60, 1, -10, 20]],
-    //     x: ['123f','f123','1s23','12a3','12s3'],
-    //     y: ['Jan', 'Feb', 'Mar'],
-    //     type: 'heatmap',
-    //     hoverongaps: false
-    //   }
-    // ];
+    cur_heatdata = JSON.parse(JSON.stringify( await this.getHeatData()));
     var layout = {
         autosize:true,
         margin: {
@@ -326,8 +312,36 @@ async function make_heat_map(){
         title:'Selected Location '+display_type+' Heat Map'
     };
 
-    Plotly.newPlot('heatDiv', data, layout);
+    Plotly.newPlot('heatDiv', cur_heatdata, layout);
 }
+async function update_heat_map() {
+    prev_heatdata = JSON.parse(JSON.stringify(cur_heatdata));
+    cur_heatdata = JSON.parse(JSON.stringify(await this.getHeatData()));
+    
+    // console.log(prev_heatdata);
+    // console.log(cur_heatdata);
+    let pnum = 15;
+    for (var i = 0; i <= pnum; i++) {
+        var cal = prev_heatdata[0].z.map((a, idx) => a.map((b,idx2) =>  b*(pnum-i)/pnum + cur_heatdata[0].z[idx][idx2]*i/pnum));
+        console.log(cal);
+        var new_heatdata = JSON.parse(JSON.stringify(cur_heatdata));
+        new_heatdata[0].z = cal;
+        Plotly.animate('heatDiv', {
+            data: new_heatdata,
+            traces: [0],
+            layout: {}
+          }, {
+            transition: {
+              duration: 30,
+              easing: 'cubic-in-out'
+            },
+            frame: {
+              duration: 30
+            }
+          })
+    }
+}
+
 async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
@@ -399,7 +413,7 @@ function input_onchange(element){
     
 }
 async function update_map(){
-    console.log('123')
+    // console.log('123')
     var data = await getMapData(year, month, display_type)
     Plotly.animate('mapDiv', {
         data: data,
@@ -555,7 +569,7 @@ async function getYearData(type){
     return await fetch('https://exodus.tw/api/getYearDataByLoc.php?lon='+selected_location[0]+'&lat='+selected_location[1]+'&type='+type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
-        console.log(data['Result'])
+        // console.log(data['Result'])
         
         if(type == 'Rain'){
             var bar1 = {
@@ -589,7 +603,7 @@ async function getYearData(type){
             var processed_data = [line2, line1, line3];
         }
         
-        console.log(processed_data)
+        // console.log(processed_data)
         return processed_data
     })
     .catch((error)=>{
