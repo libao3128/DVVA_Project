@@ -397,7 +397,7 @@ async function update_map(){
       
       //console.log(prev_mapdata[0].marker.color);
       // console.log(cur_heatdata);
-      let pnum = 10;
+      let pnum = 5;
       for (var i = 0; i <= pnum; i++) {
           var cal = prev_mapdata[0].marker.color.map((b,idx2) =>  b*(pnum-i)/pnum + cur_mapdata[0].marker.color[idx2]*i/pnum);
           //console.log(cal);
@@ -410,11 +410,11 @@ async function update_map(){
               layout: {}
             }, {
               transition: {
-                duration: 60,
+                duration: 120,
                 easing: 'cubic-in-out'
               },
               frame: {
-                duration: 60
+                duration: 120
               }
             })
       }
