@@ -126,7 +126,7 @@ async function make_map(){
         selected_location = [data.points[0].lon, data.points[0].lat]
         make_map()
         make_line_chart()
-        make_bar_chart()
+        update_bar_chart()
         make_heat_map()
         
     });
