@@ -515,8 +515,12 @@ function button_onclick(element){
         rain_button.style.backgroundColor = '#fafafa'
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
+
     update_map()
+
     update_heat_map()
+
+
 }
 function getMonthName(monthNumber) {
     const date = new Date();
@@ -601,10 +605,21 @@ async function getHeatData(){
     return await fetch('https://exodus.tw/api/getDataByLoc.php?lon='+String(selected_location[0])+'&lat='+String(selected_location[1])+'&type='+display_type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
+        var cmin = {
+            'Rain':0,
+            'Temperature':0
+        }
+        var cmax = {
+            'Rain':30,
+            'Temperature':30
+        }
         var processed_data = {
             z: [],
             x: [],
             y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            colorscale: scl[display_type],
+            cmin:cmin[display_type],
+            cmax:cmax[display_type],
             type: 'heatmap',
             hoverongaps: false
         };
