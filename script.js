@@ -470,6 +470,13 @@ async function getMapData(){
             
         })
         */
+       
+        let heat_unit = "";
+        if (display_type == "Rain") {
+            heat_unit = "mm";
+        } else {
+            heat_unit = "\xB0C";
+        }
         var pinvalue = data['Result'].find(ele => ele.Lon == selected_location[0] && ele.Lat == selected_location[1]).Value;
         var processed_data = [{
                 type: 'scattermapbox',
@@ -481,7 +488,7 @@ async function getMapData(){
                     cmin:cmin[display_type],
                     cmax:cmax[display_type],
                     colorbar: {
-                        title: display_type
+                        title: heat_unit
                     },
                     opacity:0.8
                 },
@@ -546,9 +553,9 @@ async function getHeatData(){
         }
         let heat_unit = "";
         if (display_type == "Rain") {
-            heat_unit = "(unit:mm)";
+            heat_unit = "mm";
         } else {
-            heat_unit = "(unit:\xB0C)";
+            heat_unit = "\xB0C";
         }
         var processed_data = {
             z: [],
