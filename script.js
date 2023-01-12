@@ -50,7 +50,7 @@ function make_left_page(){
     var month_bar = document.createElement('input')
     month_bar.type = 'range'
     month_bar.id = 'month_bar'
-    month_bar.min = 0
+    month_bar.min = 1
     month_bar.max = 12
     month_bar.step = 1
     month_bar.value = String(month)
@@ -100,6 +100,7 @@ function make_left_page(){
 async function make_map(){
     let mapDiv = document.getElementById('mapDiv')
 
+
     var layout = {
         mapbox: {
             style: "stamen-terrain",
@@ -129,7 +130,7 @@ async function make_map(){
             lon: [selected_location[0]], lat: [selected_location[1]],
             marker: {color: 'yellow', size: 20, 
             },
-            
+            name:'selected location'
         }]
         Plotly.animate('mapDiv', {
             data: data,
@@ -496,18 +497,25 @@ async function getMapData(){
             
         })
         */
-        var scl = {
-            'Rain':[ [0,'rgb(255, 255, 255)'], [1,'rgb(5, 10, 172)']],
-            'Temperature':[[0,'rgb(5, 10, 172)'], [0.5, 'white'], [1,'rgb(255, 10, 5)'],]
+        
+        var cmin = {
+            'Rain':0,
+            'Temperature':0
+        }
+        var cmax = {
+            'Rain':30,
+            'Temperature':30
         }
         var processed_data = [{
             type: 'scattermapbox',
             lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
-            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],  colorbar: {
+            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],cmin:cmin[display_type],
+            cmax:cmax[display_type],  colorbar: {
                 title: display_type
             }, opacity:0.8},
             text:  data['Result'].map(a=>a.Value),
-            name:display_type
+            name:display_type,
+            
         },
             {
                 type: 'scattermapbox',
@@ -630,6 +638,10 @@ var display_type = 'Rain'
 var month = 6
 var year = 2020
 var selected_location = [120.4, 23.5]
+var scl = {
+    'Rain':[ [0,'rgb(255, 255, 255)'], [1/3,'rgb(0,100,156)'], [1,'rgb(0,0,0)']],
+    'Temperature':[[0,'rgb(119, 207, 252)'], [2/3, 'rgb(255,243,103)'], [1,'rgb(253,33,2)'],]
+}
 
 make_left_page()
 make_right_page()
