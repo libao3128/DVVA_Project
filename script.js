@@ -204,8 +204,7 @@ async function make_heat_map(){
     Plotly.newPlot('heatDiv', data, layout);
 }
 async function make_bar_chart(){
-    var data = await this.getYearData(120.4, 23.45, 'Rain');
-    
+    var data = await this.getYearData('Rain');
     
     var layout = {
         autosize:true,
@@ -223,8 +222,25 @@ async function make_bar_chart(){
     
     Plotly.newPlot('barchartDiv', data, layout);
 }
+async function update_bar_chart() {
+    var data = await this.getYearData('Rain');
+    Plotly.animate('barchartDiv', {
+      data: data,
+      traces: [0],
+      layout: {}
+    }, {
+      transition: {
+        duration: 500,
+        easing: 'cubic-in-out'
+      },
+      frame: {
+        duration: 500
+      }
+    })
+}
+
 async function make_line_chart(){
-    var data = await this.getYearData(120.4, 23.45, 'Temperature');
+    var data = await this.getYearData('Temperature');
 
     var layout = {
         autosize:true,
@@ -389,7 +405,7 @@ async function getHeatData(){
         return []
     })
 }
-async function getYearData(lon, lat, type){
+async function getYearData(type){
     // lon: WGS84_Lon, lat: WGS84_Lat
     // year: if year is -1, return the average of all history data
     // type= 'Rain' or 'Temperature'
