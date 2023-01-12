@@ -231,6 +231,17 @@ async function update_heat_map() {
     
     // console.log(prev_heatdata);
     // console.log(cur_heatdata);
+    var layout = {
+        autosize:true,
+        margin: {
+            //l: 50,
+            //r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+          },
+        title:'Selected Location '+display_type+' Heat Map'
+    };
     let pnum = 15;
     for (var i = 0; i <= pnum; i++) {
         var cal = prev_heatdata[0].z.map((a, idx) => a.map((b,idx2) =>  b*(pnum-i)/pnum + cur_heatdata[0].z[idx][idx2]*i/pnum));
@@ -257,7 +268,12 @@ async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
     var layout = {
-        yaxis: {range: [0, Math.max(...data[0].y)+100]},
+        yaxis: {
+            range: [0, Math.max(...data[0].y)+100],
+            title: {
+                text: 'mm'
+            }
+        },
         barmode: 'group',
         margin: {
             //l: 50,
@@ -310,7 +326,12 @@ async function make_line_chart(){
     var data = await this.getYearData('Temperature');
 
     var layout = {
-        yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]},
+        yaxis: {
+            range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2],
+            title: {
+                text: '\xB0C'
+            }
+        },
         barmode: 'group',
         margin: {
             //l: 50,
@@ -529,7 +550,7 @@ async function getMapData(){
     
         ];
         
-        console.log(pinvalue);
+        // console.log(pinvalue);
 
         // console.log(processed_data)
         return processed_data
@@ -561,13 +582,18 @@ async function getHeatData(){
             'Rain':30,
             'Temperature':30
         }
+        let heat_unit = "";
+        if (display_type == "Rain") {
+            heat_unit = "(unit:mm)";
+        } else {
+            heat_unit = "(unit:\xB0C)";
+        }
         var processed_data = {
             z: [],
             x: [],
             y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             colorscale: scl[display_type],
-            cmin:cmin[display_type],
-            cmax:cmax[display_type],
+            colorbar: {title: heat_unit},
             type: 'heatmap',
             hoverongaps: false
         };
