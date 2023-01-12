@@ -658,13 +658,14 @@ make_right_page3()
 
 var rad = document.settings.type;
 var prev = null;
-var val = 'rain';
+var val = 'Rain';
 for (var i = 0; i < rad.length; i++) {
     rad[i].addEventListener('change', function() {
         if (this !== prev) {
             prev = this;
             val = this.value;
         }
+        document.getElementById('heat_title').innerHTML = 'Selected Location '+val+' Heat Map';
         display_type = val;
         update_map();
         update_heat_map();
