@@ -50,7 +50,7 @@ function make_left_page(){
     var month_bar = document.createElement('input')
     month_bar.type = 'range'
     month_bar.id = 'month_bar'
-    month_bar.min = 0
+    month_bar.min = 1
     month_bar.max = 12
     month_bar.step = 1
     month_bar.value = String(month)
@@ -100,6 +100,7 @@ function make_left_page(){
 async function make_map(){
     let mapDiv = document.getElementById('mapDiv')
 
+
     var layout = {
         mapbox: {
             style: "stamen-terrain",
@@ -124,8 +125,29 @@ async function make_map(){
     mapDiv.on('plotly_click', function(data){
         
         selected_location = [data.points[0].lon, data.points[0].lat]
-        make_map()
-        make_line_chart()
+        var data = [{
+            type: 'scattermapbox',
+            lon: [selected_location[0]], lat: [selected_location[1]],
+            marker: {color: 'yellow', size: 20, 
+            },
+            name:'selected location'
+        }]
+        Plotly.animate('mapDiv', {
+            data: data,
+            traces: [1],
+            layout: {}
+        }, {
+            transition: {
+              duration: 500,
+              easing: 'cubic-in-out'
+            },
+            frame: {
+              duration: 500
+            }
+        })
+       
+        //make_map()
+        update_line_chart()
         update_bar_chart()
         update_heat_map()
         
@@ -346,7 +368,7 @@ async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
     var layout = {
-        autosize:true,
+        yaxis: {range: [0, Math.max(...data[0].y)+100]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -361,20 +383,36 @@ async function make_bar_chart(){
     
     Plotly.newPlot('barchartDiv', data, layout);
 }
+
 async function update_bar_chart() {
     var data = await this.getYearData('Rain');
-    Plotly.animate('barchartDiv', {
-      data: data,
-      traces: [0],
-      layout: {}
+    await Plotly.animate('barchartDiv', {
+        data: data,
+        traces: [0],
+        layout: {}
     }, {
-      transition: {
-        duration: 500,
-        easing: 'cubic-in-out'
-      },
-      frame: {
-        duration: 500
-      }
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    })
+    await Plotly.animate('barchartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [0, Math.max(...data[0].y)*1.1]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
     })
 }
 
@@ -382,7 +420,7 @@ async function make_line_chart(){
     var data = await this.getYearData('Temperature');
 
     var layout = {
-        autosize:true,
+        yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -396,6 +434,39 @@ async function make_line_chart(){
       
     Plotly.newPlot('linechartDiv', data, layout);
 }
+
+async function update_line_chart() {
+    var data = await this.getYearData('Temperature');
+    await Plotly.animate('linechartDiv', {
+        data: data,
+        traces: [0, 1, 2],
+        layout: {}
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+    await Plotly.animate('linechartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+}
+
 function input_onchange(element){
     let name = element.target.id
     let val = element.target.value
@@ -412,6 +483,7 @@ function input_onchange(element){
     
     
 }
+<<<<<<< HEAD
 async function update_map(){
     // console.log('123')
     var data = await getMapData(year, month, display_type)
@@ -428,6 +500,30 @@ async function update_map(){
           duration: 500
         }
       })
+=======
+async function update_map(mode){
+    //console.log('123')
+   
+        var data = await getMapData(year, month, display_type)
+        Plotly.animate('mapDiv', {
+            data: data,
+            traces: [0],
+            layout: {}
+        }, {
+            transition: {
+              duration: 500,
+              easing: 'cubic-in-out'
+            },
+            frame: {
+              duration: 500
+            }
+        })
+    
+    
+        
+    
+    
+>>>>>>> 6fb570f7039c68695b2aa997dd6190f13a4c591d
 }
 function button_onclick(element){
     let name = element.target.id
@@ -483,18 +579,25 @@ async function getMapData(){
             
         })
         */
-        var scl = {
-            'Rain':[ [0,'rgb(255, 255, 255)'], [1,'rgb(5, 10, 172)']],
-            'Temperature':[[0,'rgb(5, 10, 172)'], [0.5, 'white'], [1,'rgb(255, 10, 5)'],]
+        
+        var cmin = {
+            'Rain':0,
+            'Temperature':0
+        }
+        var cmax = {
+            'Rain':30,
+            'Temperature':30
         }
         var processed_data = [{
             type: 'scattermapbox',
             lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
-            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],  colorbar: {
+            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],cmin:cmin[display_type],
+            cmax:cmax[display_type],  colorbar: {
                 title: display_type
             }, opacity:0.8},
             text:  data['Result'].map(a=>a.Value),
-            name:display_type
+            name:display_type,
+            
         },
             {
                 type: 'scattermapbox',
@@ -600,7 +703,7 @@ async function getYearData(type){
                 type: 'scatter',
                 name: 'min'
             };
-            var processed_data = [line2, line1, line3];
+            var processed_data = [line1, line2, line3];
         }
         
         // console.log(processed_data)
@@ -617,6 +720,10 @@ var display_type = 'Rain'
 var month = 6
 var year = 2020
 var selected_location = [120.4, 23.5]
+var scl = {
+    'Rain':[ [0,'rgb(255, 255, 255)'], [1/3,'rgb(0,100,156)'], [1,'rgb(0,0,0)']],
+    'Temperature':[[0,'rgb(119, 207, 252)'], [2/3, 'rgb(255,243,103)'], [1,'rgb(253,33,2)'],]
+}
 
 make_left_page()
 make_right_page()
