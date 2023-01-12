@@ -171,128 +171,6 @@ async function make_map(){
     
 }
 
-function make_animation_map(){
-    let mapDiv = document.getElementById('mapDiv')
-
-    function filter_and_unpack(rows, key, year) {
-        return rows.filter(row => row['year'] == year).map(row => row[key])
-    }
-    
-    var frames = []
-    var slider_steps = []
-    
-    var n = 11;
-    var num = 1952;
-    for (var i = 0; i <= n; i++) {
-      var z = filter_and_unpack(rows, 'lifeExp', num)
-      var locations = filter_and_unpack(rows, 'iso_alpha', num)
-      frames[i] = {data: [{z: z, locations: locations, text: locations}], name: num}
-      slider_steps.push ({
-          label: num.toString(),
-          method: "animate",
-          args: [[num], {
-              mode: "immediate",
-              transition: {duration: 300},
-              frame: {duration: 300}
-            }
-          ]
-        })
-      num = num + 5
-    }
-      
-    var data = [{
-        type: 'choropleth',
-        locationmode: 'world',
-        locations: frames[0].data[0].locations,
-        z: frames[0].data[0].z,
-        text: frames[0].data[0].locations,
-        zauto: false,
-        zmin: 30,
-        zmax: 90
-      
-    }];
-    var layout = {
-        title: 'World Life Expectency<br>1952 - 2007',
-        geo:{
-           //scope: 'world',
-           center: { lon: 120.9738819, lat: 23.97565 },
-           countrycolor: 'rgb(255, 255, 255)',
-           showland: true,
-           landcolor: 'rgb(217, 217, 217)',
-           showlakes: true,
-           lakecolor: 'rgb(255, 255, 255)',
-           subunitcolor: 'rgb(255, 255, 255)',
-           lonaxis: {},
-           lataxis: {}
-        },
-        updatemenus: [{
-          x: 0.1,
-          y: 0,
-          yanchor: "top",
-          xanchor: "right",
-          showactive: false,
-          direction: "left",
-          type: "buttons",
-          pad: {"t": 87, "r": 10},
-          buttons: [{
-            method: "animate",
-            args: [null, {
-              fromcurrent: true,
-              transition: {
-                duration: 200,
-              },
-              frame: {
-                duration: 500
-              }
-            }],
-            label: "Play"
-          }, {
-            method: "animate",
-            args: [
-              [null],
-              {
-                mode: "immediate",
-                transition: {
-                  duration: 0
-                },
-                frame: {
-                  duration: 0
-                }
-              }
-            ],
-            label: "Pause"
-          }]
-        }],
-        sliders: [{
-          active: 0,
-          steps: slider_steps,
-          x: 0.1,
-          len: 0.9,
-          xanchor: "left",
-          y: 0,
-          yanchor: "top",
-          pad: {t: 50, b: 10},
-          currentvalue: {
-            visible: true,
-            prefix: "Year:",
-            xanchor: "right",
-            font: {
-              size: 20,
-              color: "#666"
-            }
-          },
-          transition: {
-            duration: 300,
-            easing: "cubic-in-out"
-          }
-        }]
-        };
-      
-      Plotly.newPlot('mapDiv', data, layout).then(function() {
-          Plotly.addFrames('mapDiv', frames);
-        });
-      
-}
 function make_right_page(){
     let rightDiv = document.getElementsByClassName('right-page')[0]
     
@@ -487,7 +365,7 @@ var prev_mapdata, cur_mapdata;
 async function update_map(){
     // console.log('123')
     /*
-    var data = 
+    var data = await getMapData(year, month, display_type)
     Plotly.animate('mapDiv', {
         data: data,
         traces: [0],
@@ -508,24 +386,24 @@ async function update_map(){
       
       //console.log(prev_mapdata[0].marker.color);
       // console.log(cur_heatdata);
-      let pnum = 15;
+      let pnum = 10;
       for (var i = 0; i <= pnum; i++) {
           var cal = prev_mapdata[0].marker.color.map((b,idx2) =>  b*(pnum-i)/pnum + cur_mapdata[0].marker.color[idx2]*i/pnum);
           //console.log(cal);
           var new_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
           new_mapdata[0].marker.color = cal;
-          console.log([new_mapdata[0], cur_mapdata[1]])
+          //console.log([new_mapdata[0], cur_mapdata[1]])
           Plotly.animate('mapDiv', {
               data: [new_mapdata[0], cur_mapdata[1]],
               traces: [0],
               layout: {}
             }, {
               transition: {
-                duration: 30,
+                duration: 60,
                 easing: 'cubic-in-out'
               },
               frame: {
-                duration: 30
+                duration: 60
               }
             })
       }
