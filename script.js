@@ -3,26 +3,26 @@ function make_left_page(){
     let myDiv = document.getElementsByClassName('left-page')[0]
     
     // Build Button Panel
-    let buttonDiv = document.createElement('div')
-    buttonDiv.name = 'button-panel'
-    buttonDiv.style.height = '7%'
-    buttonDiv.className = 'sub-sub-page'
-    myDiv.appendChild(buttonDiv)
+    // let buttonDiv = document.createElement('div')
+    // buttonDiv.name = 'button-panel'
+    // buttonDiv.style.height = '7%'
+    // buttonDiv.className = 'sub-sub-page'
+    // myDiv.appendChild(buttonDiv)
 
-    var button = document.createElement("BUTTON");
-    button.innerHTML = 'Rain';
-    button.className = 'DisplayButton leftButton'
-    button.id = 'rain_button'
-    button.onclick = button_onclick
-    button.style.backgroundColor = 'rgba(1, 131, 186, 0.18)'
-    buttonDiv.appendChild(button)
+    // var button = document.createElement("BUTTON");
+    // button.innerHTML = 'Rain';
+    // button.className = 'DisplayButton leftButton'
+    // button.id = 'rain_button'
+    // button.onclick = button_onclick
+    // button.style.backgroundColor = 'rgba(1, 131, 186, 0.18)'
+    // buttonDiv.appendChild(button)
 
-    var button = document.createElement("BUTTON");
-    button.innerHTML = 'Temperature';
-    button.className = 'DisplayButton rightButton'
-    button.id = 'temp_button'
-    button.onclick = button_onclick
-    buttonDiv.appendChild(button)
+    // var button = document.createElement("BUTTON");
+    // button.innerHTML = 'Temperature';
+    // button.className = 'DisplayButton rightButton'
+    // button.id = 'temp_button'
+    // button.onclick = button_onclick
+    // buttonDiv.appendChild(button)
 
 
     // Build Chart
@@ -42,60 +42,33 @@ function make_left_page(){
     barDiv.style.height = '10%'
     myDiv.appendChild(barDiv)
 
-    let month_barDiv = document.createElement('div')
-    month_barDiv.className = 'sub-sub-page'
-    barDiv.appendChild(month_barDiv)
-
-
-    var month_bar = document.createElement('input')
-    month_bar.type = 'range'
-    month_bar.id = 'month_bar'
+    var month_bar = document.getElementById('month_bar')
     month_bar.min = 1
     month_bar.max = 12
     month_bar.step = 1
     month_bar.value = String(month)
-    month_bar.style.width = '75%'
-    month_bar.style.marginRight = '20px'
+    month_bar.style.paddingRight = '25px'
+    month_bar.style.paddingLeft = '25px'
     month_bar.oninput = input_onchange
     month_bar.onchange = update_map
-    month_barDiv.appendChild(month_bar)
 
-    var month_labelDiv = document.createElement('div')
-    month_labelDiv.style.width = '5%'
-    month_labelDiv.id = 'month_bar_label'
+    var month_labelDiv = document.getElementById('month_bar_label')
     var month_label = document.createTextNode(getMonthName(month))
     month_labelDiv.appendChild(month_label)
-    
-    month_barDiv.appendChild(month_labelDiv)
 
-
-    let year_barDiv = document.createElement('div')
-    year_barDiv.className = 'sub-sub-page'
-    barDiv.appendChild(year_barDiv)
-
-
-    var year_bar = document.createElement('input')
-    year_bar.type = 'range'
-    year_bar.id = 'year_bar'
+    var year_bar = document.getElementById('year_bar')
     year_bar.min = 1960
     year_bar.max = 2020
     year_bar.step = 1
     year_bar.value = String(year)
-    year_bar.style.width = '75%'
-    year_bar.style.marginRight = '20px'
+    year_bar.style.paddingRight = '25px'
+    year_bar.style.paddingLeft = '25px'
     year_bar.oninput = input_onchange
     year_bar.onchange = update_map
-    year_barDiv.appendChild(year_bar)
 
-    var year_labelDiv = document.createElement('div')
-    year_labelDiv.style.width = '5%'
-    year_labelDiv.id = 'year_bar_label'
+    var year_labelDiv = document.getElementById('year_bar_label')
     var year_label = document.createTextNode(year)
-    
     year_labelDiv.appendChild(year_label)
-
-    year_barDiv.appendChild(year_labelDiv)
-    
 }
 async function make_map(){
     let mapDiv = document.getElementById('mapDiv')
@@ -110,10 +83,10 @@ async function make_map(){
         showlegend: false,
         autosize:true,
         height: 600,
-        width: 600,
+        width: 640,
         margin:{
-            b: 50,
-            t: 50,
+            b: 25,
+            t: 25,
         },
         colorbar: true
         
@@ -221,11 +194,9 @@ async function make_heat_map(){
     cur_heatdata = JSON.parse(JSON.stringify( await this.getHeatData()));
     var layout = {
         autosize:true,
-        width: 600,
-        height: 300,
+        width: 640,
+        height: 250,
         margin: {
-            //l: 50,
-            //r: 50,
             b: 25,
             t: 25,
             pad: 4
@@ -286,11 +257,11 @@ async function make_bar_chart(){
         },
         barmode: 'group',
         width: 600,
-        height: 150,
+        height: 160,
         margin: {
             //l: 50,
             //r: 50,
-            b: 25,
+            b: 20,
             t: 25,
             pad: 4
         },
@@ -339,18 +310,18 @@ async function make_line_chart(){
 
     var layout = {
         yaxis: {
-            range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2],
+            range: [Math.min(...data[2].y)-2, Math.max(...data[0].y)+2],
             title: {
                 text: '\xB0C'
             }
         },
         barmode: 'group',
         width: 600,
-        height: 150,
+        height: 160,
         margin: {
             //l: 50,
             //r: 50,
-            b: 25,
+            b: 20,
             t: 25,
             pad: 4
         },
@@ -379,7 +350,7 @@ async function update_line_chart() {
         data: [],
         traces: [],
         layout: {
-            yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]}
+            yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[0].y)+2]}
         }
     }, {
         transition: {
@@ -405,8 +376,6 @@ function input_onchange(element){
         label.textContent = String(getMonthName(val))
         month = val
     }
-    
-    
 }
 var prev_mapdata, cur_mapdata;
 async function update_map(){
@@ -430,7 +399,7 @@ async function update_map(){
 
       prev_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
       cur_mapdata = JSON.parse(JSON.stringify(await getMapData(year, month, display_type)));
-      console.log(cur_mapdata)
+    //   console.log(cur_mapdata)
       for(i=0;i<cur_mapdata[0].lat.length;i++){
         if (cur_mapdata[0].lon[i]==selected_location[1]&&cur_mapdata[0].lat[i]==selected_location[0]){
             cur_mapdata[2].marker.color = cur_mapdata[0].marker.color[i]
@@ -464,28 +433,6 @@ async function update_map(){
               }
             })
       }
-}
-function button_onclick(element){
-    let name = element.target.id
-    var rain_button = document.getElementById('rain_button')
-    var temp_button = document.getElementById('temp_button')
-    if (name.includes('rain')){
-        display_type = 'Rain'
-        rain_button.style.backgroundColor = 'rgba(1, 131, 186, 0.18)'
-        temp_button.style.backgroundColor = '#fafafa'
-        rain_button.className = ' DisplayButton leftButton'
-    }
-    if (name.includes('temp')){
-        display_type = 'Temperature'
-        rain_button.style.backgroundColor = '#fafafa'
-        temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
-    }
-
-    update_map()
-
-    update_heat_map()
-
-
 }
 function getMonthName(monthNumber) {
     const date = new Date();
@@ -657,16 +604,16 @@ async function getYearData(type){
         }else if(type == 'Temperature'){
             var line1 = {
                 x: data['Result'].map(x => x.Year),
-                y: data['Result'].map(x => x.Value),
+                y: data['Result'].map(x => x.MaxValue),
                 type: 'scatter',
-                name: 'average'
+                name:'max'
             };
             
             var line2 = {
                 x: data['Result'].map(x => x.Year),
-                y: data['Result'].map(x => x.MaxValue),
+                y: data['Result'].map(x => x.Value),
                 type: 'scatter',
-                name:'max'
+                name: 'average'
             };
             
             var line3 = {
@@ -709,3 +656,18 @@ make_left_page()
 make_right_page1()
 make_right_page2()
 make_right_page3()
+
+var rad = document.settings.type;
+var prev = null;
+var val = 'rain';
+for (var i = 0; i < rad.length; i++) {
+    rad[i].addEventListener('change', function() {
+        if (this !== prev) {
+            prev = this;
+            val = this.value;
+        }
+        display_type = val;
+        update_map();
+        update_heat_map();
+    });
+}
