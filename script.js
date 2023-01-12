@@ -201,7 +201,7 @@ async function make_heat_map(){
             t: 25,
             pad: 4
         },
-        title:'Selected Location '+display_type+' Heat Map'
+       
     };
 
     Plotly.newPlot('heatDiv', cur_heatdata, layout);
@@ -221,7 +221,7 @@ async function update_heat_map() {
             t: 50,
             pad: 4
           },
-        title:'Selected Location '+display_type+' Heat Map'
+        
     };
     let pnum = 15;
     for (var i = 0; i <= pnum; i++) {
@@ -232,7 +232,7 @@ async function update_heat_map() {
         Plotly.animate('heatDiv', {
             data: new_heatdata,
             traces: [0],
-            layout: {title:'Selected Location '+display_type+' Heat Map'}
+            layout: {}
           }, {
             transition: {
               duration: 30,
@@ -325,7 +325,7 @@ async function make_line_chart(){
             t: 25,
             pad: 4
         },
-        title:'Selected Location Average Temperature'
+       
     };
       
     Plotly.newPlot('linechartDiv', data, layout);
