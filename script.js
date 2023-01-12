@@ -546,15 +546,7 @@ async function getMapData(){
             
         })
         */
-        
-        var cmin = {
-            'Rain':0,
-            'Temperature':0
-        }
-        var cmax = {
-            'Rain':30,
-            'Temperature':30
-        }
+        var pinvalue = data['Result'].find(ele => ele.Lon == selected_location[0] && ele.Lat == selected_location[1]).Value;
         var processed_data = [{
             type: 'scattermapbox',
             lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
@@ -569,14 +561,17 @@ async function getMapData(){
             {
                 type: 'scattermapbox',
                 lon: [selected_location[0]], lat: [selected_location[1]],
-                marker: {color: 'yellow', size: 20, 
-                },
+                marker: {color: [pinvalue], colorscale: scl[display_type], size: 20, 
+                cmin:cmin[display_type], cmax:cmax[display_type]
+            },
                 
             }
 
     
         ];
         
+        console.log(pinvalue);
+
         // console.log(processed_data)
         return processed_data
     })
@@ -690,6 +685,14 @@ var selected_location = [120.4, 23.5]
 var scl = {
     'Rain':[ [0,'rgb(255, 255, 255)'], [1/3,'rgb(0,100,156)'], [1,'rgb(0,0,0)']],
     'Temperature':[[0,'rgb(119, 207, 252)'], [2/3, 'rgb(255,243,103)'], [1,'rgb(253,33,2)'],]
+}
+var cmin = {
+    'Rain':0,
+    'Temperature':0
+}
+var cmax = {
+    'Rain':30,
+    'Temperature':30
 }
 
 make_left_page()
