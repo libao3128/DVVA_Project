@@ -124,7 +124,28 @@ async function make_map(){
     mapDiv.on('plotly_click', function(data){
         
         selected_location = [data.points[0].lon, data.points[0].lat]
-        make_map()
+        var data = [{
+            type: 'scattermapbox',
+            lon: [selected_location[0]], lat: [selected_location[1]],
+            marker: {color: 'yellow', size: 20, 
+            },
+            
+        }]
+        Plotly.animate('mapDiv', {
+            data: data,
+            traces: [1],
+            layout: {}
+        }, {
+            transition: {
+              duration: 500,
+              easing: 'cubic-in-out'
+            },
+            frame: {
+              duration: 500
+            }
+        })
+       
+        //make_map()
         update_line_chart()
         update_bar_chart()
         make_heat_map()
@@ -432,22 +453,28 @@ function input_onchange(element){
     
     
 }
-async function update_map(){
-    console.log('123')
-    var data = await getMapData(year, month, display_type)
-    Plotly.animate('mapDiv', {
-        data: data,
-        traces: [0],
-        layout: {}
-      }, {
-        transition: {
-          duration: 500,
-          easing: 'cubic-in-out'
-        },
-        frame: {
-          duration: 500
-        }
-      })
+async function update_map(mode){
+    //console.log('123')
+   
+        var data = await getMapData(year, month, display_type)
+        Plotly.animate('mapDiv', {
+            data: data,
+            traces: [0],
+            layout: {}
+        }, {
+            transition: {
+              duration: 500,
+              easing: 'cubic-in-out'
+            },
+            frame: {
+              duration: 500
+            }
+        })
+    
+    
+        
+    
+    
 }
 function button_onclick(element){
     let name = element.target.id
