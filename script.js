@@ -182,8 +182,8 @@ async function make_map(){
     
 }
 
-function make_right_page(){
-    let rightDiv = document.getElementsByClassName('right-page')[0]
+function make_right_page1(){
+    let rightDiv = document.getElementsByClassName('right-page1')[0]
     
     var heatmapDiv = document.createElement('div')
     heatmapDiv.className = 'sub-sub-page'
@@ -192,6 +192,10 @@ function make_right_page(){
     heatmapDiv.style.width = '100%'
     rightDiv.appendChild(heatmapDiv)
     make_heat_map()
+}
+
+function make_right_page2(){
+    let rightDiv = document.getElementsByClassName('right-page2')[0]
 
     var barchartDiv = document.createElement('div')
     barchartDiv.className = 'sub-sub-page'
@@ -199,6 +203,10 @@ function make_right_page(){
     barchartDiv.style.height = '25%'
     rightDiv.appendChild(barchartDiv)
     make_bar_chart()
+}
+
+function make_right_page3(){
+    let rightDiv = document.getElementsByClassName('right-page3')[0]
 
     var linechartDiv = document.createElement('div')
     linechartDiv.className = 'sub-sub-page'
@@ -681,4 +689,6 @@ var cmax = {
 }
 
 make_left_page()
-make_right_page()
+make_right_page1()
+make_right_page2()
+make_right_page3()
