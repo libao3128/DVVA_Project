@@ -191,6 +191,7 @@ function make_right_page3(){
 
 var prev_heatdata, cur_heatdata;
 async function make_heat_map(){
+    document.getElementById('heap_load').hidden = false;
     cur_heatdata = JSON.parse(JSON.stringify( await this.getHeatData()));
     var layout = {
         autosize:true,
@@ -206,8 +207,10 @@ async function make_heat_map(){
     };
 
     Plotly.newPlot('heatDiv', cur_heatdata, layout);
+    document.getElementById('heap_load').hidden = true;
 }
 async function update_heat_map() {
+    document.getElementById('heap_load').hidden = false;
     prev_heatdata = JSON.parse(JSON.stringify(cur_heatdata));
     cur_heatdata = JSON.parse(JSON.stringify(await this.getHeatData()));
     
@@ -231,9 +234,11 @@ async function update_heat_map() {
             }
           })
     }
+    document.getElementById('heap_load').hidden = true;
 }
 
 async function make_bar_chart(){
+    document.getElementById('bar_load').hidden = false;
     var data = await this.getYearData('Rain');
     
     var layout = {
@@ -257,9 +262,11 @@ async function make_bar_chart(){
     };
     
     Plotly.newPlot('barchartDiv', data, layout);
+    document.getElementById('bar_load').hidden = true;
 }
 
 async function update_bar_chart() {
+    document.getElementById('bar_load').hidden = false;
     var data = await this.getYearData('Rain');
     await Plotly.animate('barchartDiv', {
         data: data,
@@ -289,10 +296,11 @@ async function update_bar_chart() {
             duration: 500
         }
     })
-    
+    document.getElementById('bar_load').hidden = true;
 }
 
 async function make_line_chart(){
+    document.getElementById('line_load').hidden = false;
     var data = await this.getYearData('Temperature');
 
     var layout = {
@@ -316,9 +324,11 @@ async function make_line_chart(){
     };
       
     Plotly.newPlot('linechartDiv', data, layout);
+    document.getElementById('line_load').hidden = true;
 }
 
 async function update_line_chart() {
+    document.getElementById('line_load').hidden = false;
     var data = await this.getYearData('Temperature');
     await Plotly.animate('linechartDiv', {
         data: data,
@@ -348,6 +358,7 @@ async function update_line_chart() {
             duration: 500
         }
     });
+    document.getElementById('line_load').hidden = true;
 }
 
 function input_onchange(element){
