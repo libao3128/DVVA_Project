@@ -250,7 +250,7 @@ async function make_bar_chart(){
             //l: 50,
             //r: 50,
             b: 25,
-            t: 25,
+            t: 0,
             pad: 4
         }
     
@@ -309,7 +309,7 @@ async function make_line_chart(){
             //l: 50,
             //r: 50,
             b: 25,
-            t: 25,
+            t: 10,
             pad: 4
         },
        
@@ -585,7 +585,10 @@ async function getYearData(type){
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.Value),
                 name: 'Rain',
-                type: 'bar'
+                type: 'bar',
+                marker: {
+                    color: 'rgb(0,100,156)'
+                }
             };
             var processed_data = [bar1];
         }else if(type == 'Temperature'){
@@ -593,21 +596,30 @@ async function getYearData(type){
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.MaxValue),
                 type: 'scatter',
-                name:'max'
+                name:'highest',
+                marker: {
+                    color: 'rgb(253,33,2)'
+                }
             };
             
             var line2 = {
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.Value),
                 type: 'scatter',
-                name: 'average'
+                name: 'average',
+                marker: {
+                    color: 'rgb(0,0,0)'
+                }
             };
             
             var line3 = {
                 x: data['Result'].map(x => x.Year),
                 y: data['Result'].map(x => x.MinValue),
                 type: 'scatter',
-                name: 'min'
+                name: 'lowest',
+                marker: {
+                    color: 'rgb(119, 207, 252)'
+                }
             };
             var processed_data = [line1, line2, line3];
         }
