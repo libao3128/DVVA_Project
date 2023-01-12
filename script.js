@@ -115,8 +115,8 @@ async function make_map(){
             b: 50,
             t: 50,
         },
-        colorbar: true,
-        title:display_type+' scatter'
+        colorbar: true
+        
     };
     cur_mapdata = await this.getMapData(year, month, display_type)
 
@@ -259,7 +259,7 @@ async function update_heat_map() {
         Plotly.animate('heatDiv', {
             data: new_heatdata,
             traces: [0],
-            layout: layout
+            layout: {title:'Selected Location '+display_type+' Heat Map'}
           }, {
             transition: {
               duration: 30,
@@ -327,6 +327,7 @@ async function update_bar_chart() {
             duration: 500
         }
     })
+    
 }
 
 async function make_line_chart(){
@@ -423,6 +424,14 @@ async function update_map(){
 
       prev_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
       cur_mapdata = JSON.parse(JSON.stringify(await getMapData(year, month, display_type)));
+      console.log(cur_mapdata)
+      for(i=0;i<cur_mapdata[0].lat.length;i++){
+        if (cur_mapdata[0].lon[i]==selected_location[1]&&cur_mapdata[0].lat[i]==selected_location[0]){
+            cur_mapdata[2].marker.color = cur_mapdata[0].marker.color[i]
+        }
+      }
+      
+      
       
       //console.log(prev_mapdata[0].marker.color);
       // console.log(cur_heatdata);
@@ -432,10 +441,12 @@ async function update_map(){
           //console.log(cal);
           var new_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
           new_mapdata[0].marker.color = cal;
+          cal = prev_mapdata[2].marker.color.map((b,idx2) =>  b*(pnum-i)/pnum + cur_mapdata[2].marker.color[idx2]*i/pnum);
+          new_mapdata[2].marker.color = cal;
           //console.log([new_mapdata[0], cur_mapdata[1]])
           Plotly.animate('mapDiv', {
-              data: [new_mapdata[0], cur_mapdata[1]],
-              traces: [0],
+              data: [new_mapdata[0], new_mapdata[2]],
+              traces: [0, 2],
               layout: {}
             }, {
               transition: {
