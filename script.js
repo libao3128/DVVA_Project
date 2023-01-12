@@ -118,9 +118,9 @@ async function make_map(){
         colorbar: true,
         title:display_type+' scatter'
     };
-    var data = await this.getMapData(year, month, display_type)
+    cur_mapdata = await this.getMapData(year, month, display_type)
 
-    Plotly.newPlot("mapDiv", data, layout);
+    Plotly.newPlot("mapDiv", cur_mapdata, layout);
     // new add
     mapDiv.on('plotly_click', function(data){
         // console.log(data)
@@ -494,9 +494,11 @@ function input_onchange(element){
     
     
 }
+var prev_mapdata, cur_mapdata;
 async function update_map(){
     // console.log('123')
-    var data = await getMapData(year, month, display_type)
+    /*
+    var data = 
     Plotly.animate('mapDiv', {
         data: data,
         traces: [0],
@@ -510,6 +512,34 @@ async function update_map(){
           duration: 500
         }
       })
+*/
+
+      prev_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
+      cur_mapdata = JSON.parse(JSON.stringify(await getMapData(year, month, display_type)));
+      
+      //console.log(prev_mapdata[0].marker.color);
+      // console.log(cur_heatdata);
+      let pnum = 15;
+      for (var i = 0; i <= pnum; i++) {
+          var cal = prev_mapdata[0].marker.color.map((b,idx2) =>  b*(pnum-i)/pnum + cur_mapdata[0].marker.color[idx2]*i/pnum);
+          //console.log(cal);
+          var new_mapdata = JSON.parse(JSON.stringify(cur_mapdata));
+          new_mapdata[0].marker.color = cal;
+          console.log([new_mapdata[0], cur_mapdata[1]])
+          Plotly.animate('mapDiv', {
+              data: [new_mapdata[0], cur_mapdata[1]],
+              traces: [0],
+              layout: {}
+            }, {
+              transition: {
+                duration: 30,
+                easing: 'cubic-in-out'
+              },
+              frame: {
+                duration: 30
+              }
+            })
+      }
 }
 function button_onclick(element){
     let name = element.target.id
@@ -526,10 +556,13 @@ function button_onclick(element){
         rain_button.style.backgroundColor = '#fafafa'
         temp_button.style.backgroundColor = 'rgba(255, 157, 136, 0.18)'
     }
-    update_map()
-    make_heat_map()
-}
 
+    update_map()
+
+    update_heat_map()
+
+
+}
 function getMonthName(monthNumber) {
     const date = new Date();
     date.setMonth(monthNumber - 1);
@@ -631,10 +664,21 @@ async function getHeatData(){
     return await fetch('https://exodus.tw/api/getDataByLoc.php?lon='+String(selected_location[0])+'&lat='+String(selected_location[1])+'&type='+display_type+'&apikey=sucaYRergn4frDMCcFpjPPkEf6EXcNpMT7dcWbp6')
     .then(function(response){return response.json()} )
     .then(function(data) {
+        var cmin = {
+            'Rain':0,
+            'Temperature':0
+        }
+        var cmax = {
+            'Rain':30,
+            'Temperature':30
+        }
         var processed_data = {
             z: [],
             x: [],
             y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            colorscale: scl[display_type],
+            cmin:cmin[display_type],
+            cmax:cmax[display_type],
             type: 'heatmap',
             hoverongaps: false
         };
