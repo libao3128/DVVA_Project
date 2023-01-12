@@ -353,7 +353,7 @@ async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
     var layout = {
-        autosize:true,
+        yaxis: {range: [0, Math.max(...data[0].y)+100]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -371,18 +371,33 @@ async function make_bar_chart(){
 
 async function update_bar_chart() {
     var data = await this.getYearData('Rain');
-    Plotly.animate('barchartDiv', {
-      data: data,
-      traces: [0],
-      layout: {}
+    await Plotly.animate('barchartDiv', {
+        data: data,
+        traces: [0],
+        layout: {}
     }, {
-      transition: {
-        duration: 500,
-        easing: 'cubic-in-out'
-      },
-      frame: {
-        duration: 500
-      }
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    })
+    await Plotly.animate('barchartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [0, Math.max(...data[0].y)*1.1]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
     })
 }
 
@@ -390,7 +405,7 @@ async function make_line_chart(){
     var data = await this.getYearData('Temperature');
 
     var layout = {
-        autosize:true,
+        yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -424,7 +439,7 @@ async function update_line_chart() {
         data: [],
         traces: [],
         layout: {
-            yaxis: {range: [Math.min(...data[2].y), Math.max(...data[1].y)]}
+            yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]}
         }
     }, {
         transition: {
