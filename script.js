@@ -125,7 +125,7 @@ async function make_map(){
         
         selected_location = [data.points[0].lon, data.points[0].lat]
         make_map()
-        make_line_chart()
+        update_line_chart()
         update_bar_chart()
         make_heat_map()
         
@@ -347,6 +347,7 @@ async function make_bar_chart(){
     
     Plotly.newPlot('barchartDiv', data, layout);
 }
+
 async function update_bar_chart() {
     var data = await this.getYearData('Rain');
     Plotly.animate('barchartDiv', {
@@ -382,6 +383,39 @@ async function make_line_chart(){
       
     Plotly.newPlot('linechartDiv', data, layout);
 }
+
+async function update_line_chart() {
+    var data = await this.getYearData('Temperature');
+    await Plotly.animate('linechartDiv', {
+        data: data,
+        traces: [0, 1, 2],
+        layout: {}
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+    await Plotly.animate('linechartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [Math.min(...data[2].y), Math.max(...data[1].y)]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+}
+
 function input_onchange(element){
     let name = element.target.id
     let val = element.target.value
@@ -586,7 +620,7 @@ async function getYearData(type){
                 type: 'scatter',
                 name: 'min'
             };
-            var processed_data = [line2, line1, line3];
+            var processed_data = [line1, line2, line3];
         }
         
         console.log(processed_data)
