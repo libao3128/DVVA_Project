@@ -82,7 +82,7 @@ async function make_map(){
         },
         showlegend: false,
         autosize:true,
-        height: 600,
+        height: 565,
         width: 640,
         margin:{
             b: 25,
@@ -438,7 +438,7 @@ function getMonthName(monthNumber) {
     const date = new Date();
     date.setMonth(monthNumber - 1);
   
-    return date.toLocaleString('en-US', { month: 'short' });
+    return date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
 }
 
 
