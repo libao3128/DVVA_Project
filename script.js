@@ -71,6 +71,7 @@ function make_left_page(){
     year_labelDiv.appendChild(year_label)
 }
 async function make_map(){
+    document.getElementById('map_load').hidden = false;
     let mapDiv = document.getElementById('mapDiv')
 
 
@@ -150,9 +151,7 @@ async function make_map(){
         }
     ];*/
     
-    
-    
-    
+    document.getElementById('map_load').hidden = true;
 }
 
 function make_right_page1(){
@@ -377,6 +376,7 @@ function input_onchange(element){
 }
 var prev_mapdata, cur_mapdata;
 async function update_map(){
+    document.getElementById('map_load').hidden = false;
     // console.log('123')
     /*
     var data = await getMapData(year, month, display_type)
@@ -431,6 +431,9 @@ async function update_map(){
               }
             })
       }
+    
+    
+    document.getElementById('map_load').hidden = true;
 }
 function getMonthName(monthNumber) {
     const date = new Date();
