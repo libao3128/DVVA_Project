@@ -115,8 +115,8 @@ async function make_map(){
             b: 50,
             t: 50,
         },
-        colorbar: true,
-        title:display_type+' scatter'
+        colorbar: true
+        
     };
     cur_mapdata = await this.getMapData(year, month, display_type)
 
@@ -240,7 +240,7 @@ async function update_heat_map() {
         Plotly.animate('heatDiv', {
             data: new_heatdata,
             traces: [0],
-            layout: {}
+            layout: {title:'Selected Location '+display_type+' Heat Map'}
           }, {
             transition: {
               duration: 30,
@@ -303,6 +303,7 @@ async function update_bar_chart() {
             duration: 500
         }
     })
+    
 }
 
 async function make_line_chart(){
