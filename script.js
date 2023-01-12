@@ -231,6 +231,17 @@ async function update_heat_map() {
     
     // console.log(prev_heatdata);
     // console.log(cur_heatdata);
+    var layout = {
+        autosize:true,
+        margin: {
+            //l: 50,
+            //r: 50,
+            b: 50,
+            t: 50,
+            pad: 4
+          },
+        title:'Selected Location '+display_type+' Heat Map'
+    };
     let pnum = 15;
     for (var i = 0; i <= pnum; i++) {
         var cal = prev_heatdata[0].z.map((a, idx) => a.map((b,idx2) =>  b*(pnum-i)/pnum + cur_heatdata[0].z[idx][idx2]*i/pnum));
@@ -240,7 +251,7 @@ async function update_heat_map() {
         Plotly.animate('heatDiv', {
             data: new_heatdata,
             traces: [0],
-            layout: {}
+            layout: layout
           }, {
             transition: {
               duration: 30,
@@ -550,13 +561,18 @@ async function getHeatData(){
             'Rain':30,
             'Temperature':30
         }
+        let heat_unit = "";
+        if (display_type == "Rain") {
+            heat_unit = "(unit:mm)";
+        } else {
+            heat_unit = "(unit:\xB0C)";
+        }
         var processed_data = {
             z: [],
             x: [],
             y: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             colorscale: scl[display_type],
-            cmin:cmin[display_type],
-            cmax:cmax[display_type],
+            colorbar: {title: heat_unit},
             type: 'heatmap',
             hoverongaps: false
         };
