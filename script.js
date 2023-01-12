@@ -123,18 +123,29 @@ async function make_map(){
     Plotly.newPlot("mapDiv", data, layout);
     // new add
     mapDiv.on('plotly_click', function(data){
-        
+        // console.log(data)
+        // console.log('hehe', data.points[0]['marker.color'])
         selected_location = [data.points[0].lon, data.points[0].lat]
-        var data = [{
-            type: 'scattermapbox',
-            lon: [selected_location[0]], lat: [selected_location[1]],
-            marker: {color: 'yellow', size: 20, 
+        var data = [
+            {
+                type: 'scattermapbox',
+                lon: [selected_location[0]], lat: [selected_location[1]],
+                marker: {color: ['#0A0A0A'], size: 24
+                },
+                name:'selected location'
             },
-            name:'selected location'
-        }]
+            {
+                type: 'scattermapbox',
+                lon: [selected_location[0]], lat: [selected_location[1]],
+                marker: {color: [data.points[0]['marker.color']], colorscale: scl[display_type], size: 20, 
+                    cmin:cmin[display_type], cmax:cmax[display_type]
+                },
+                name:'selected location'
+            }
+        ]
         Plotly.animate('mapDiv', {
             data: data,
-            traces: [1],
+            traces: [1, 2],
             layout: {}
         }, {
             transition: {
@@ -345,7 +356,7 @@ async function update_heat_map() {
     let pnum = 15;
     for (var i = 0; i <= pnum; i++) {
         var cal = prev_heatdata[0].z.map((a, idx) => a.map((b,idx2) =>  b*(pnum-i)/pnum + cur_heatdata[0].z[idx][idx2]*i/pnum));
-        console.log(cal);
+        // console.log(cal);
         var new_heatdata = JSON.parse(JSON.stringify(cur_heatdata));
         new_heatdata[0].z = cal;
         Plotly.animate('heatDiv', {
@@ -556,23 +567,41 @@ async function getMapData(){
         */
         var pinvalue = data['Result'].find(ele => ele.Lon == selected_location[0] && ele.Lat == selected_location[1]).Value;
         var processed_data = [{
-            type: 'scattermapbox',
-            lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
-            marker: {color: data['Result'].map(a=>a.Value), size: 10, colorscale: scl[display_type],cmin:cmin[display_type],
-            cmax:cmax[display_type],  colorbar: {
-                title: display_type
-            }, opacity:0.8},
-            text:  data['Result'].map(a=>a.Value),
-            name:display_type,
-            
-        },
+                type: 'scattermapbox',
+                lon: data['Result'].map(a=>a.Lon), lat: data['Result'].map(a=>a.Lat),
+                marker: {
+                    color: data['Result'].map(a=>a.Value),
+                    size: 10,
+                    colorscale: scl[display_type],
+                    cmin:cmin[display_type],
+                    cmax:cmax[display_type],
+                    colorbar: {
+                        title: display_type
+                    },
+                    opacity:0.8
+                },
+                text:  data['Result'].map(a=>a.Value),
+                name:display_type,
+                
+            },
             {
                 type: 'scattermapbox',
                 lon: [selected_location[0]], lat: [selected_location[1]],
-                marker: {color: [pinvalue], colorscale: scl[display_type], size: 20, 
-                cmin:cmin[display_type], cmax:cmax[display_type]
+                marker: {
+                    color: ['#0A0A0A'],
+                    size: 24, 
+                },
             },
-                
+            {
+                type: 'scattermapbox',
+                lon: [selected_location[0]], lat: [selected_location[1]],
+                marker: {
+                    color: [pinvalue],
+                    colorscale: scl[display_type],
+                    size: 20, 
+                    cmin:cmin[display_type],
+                    cmax:cmax[display_type]
+                },
             }
 
     
@@ -584,8 +613,8 @@ async function getMapData(){
         return processed_data
     })
     .catch((error)=>{
-        console.log(error)
-        alert('fetch error')
+        console.log('fetch error', error)
+        // alert('fetch error')
         return []
 
     })
