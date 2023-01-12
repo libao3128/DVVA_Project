@@ -147,7 +147,7 @@ async function make_map(){
         })
        
         //make_map()
-        make_line_chart()
+        update_line_chart()
         update_bar_chart()
         make_heat_map()
         
@@ -354,7 +354,7 @@ async function make_bar_chart(){
     var data = await this.getYearData('Rain');
     
     var layout = {
-        autosize:true,
+        yaxis: {range: [0, Math.max(...data[0].y)+100]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -369,20 +369,36 @@ async function make_bar_chart(){
     
     Plotly.newPlot('barchartDiv', data, layout);
 }
+
 async function update_bar_chart() {
     var data = await this.getYearData('Rain');
-    Plotly.animate('barchartDiv', {
-      data: data,
-      traces: [0],
-      layout: {}
+    await Plotly.animate('barchartDiv', {
+        data: data,
+        traces: [0],
+        layout: {}
     }, {
-      transition: {
-        duration: 500,
-        easing: 'cubic-in-out'
-      },
-      frame: {
-        duration: 500
-      }
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    })
+    await Plotly.animate('barchartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [0, Math.max(...data[0].y)*1.1]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
     })
 }
 
@@ -390,7 +406,7 @@ async function make_line_chart(){
     var data = await this.getYearData('Temperature');
 
     var layout = {
-        autosize:true,
+        yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]},
         barmode: 'group',
         margin: {
             //l: 50,
@@ -404,6 +420,39 @@ async function make_line_chart(){
       
     Plotly.newPlot('linechartDiv', data, layout);
 }
+
+async function update_line_chart() {
+    var data = await this.getYearData('Temperature');
+    await Plotly.animate('linechartDiv', {
+        data: data,
+        traces: [0, 1, 2],
+        layout: {}
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+    await Plotly.animate('linechartDiv', {
+        data: [],
+        traces: [],
+        layout: {
+            yaxis: {range: [Math.min(...data[2].y)-2, Math.max(...data[1].y)+2]}
+        }
+    }, {
+        transition: {
+            duration: 500,
+            easing: 'cubic-in-out'
+        },
+        frame: {
+            duration: 500
+        }
+    });
+}
+
 function input_onchange(element){
     let name = element.target.id
     let val = element.target.value
@@ -621,7 +670,7 @@ async function getYearData(type){
                 type: 'scatter',
                 name: 'min'
             };
-            var processed_data = [line2, line1, line3];
+            var processed_data = [line1, line2, line3];
         }
         
         console.log(processed_data)
